@@ -5,7 +5,7 @@ import { escape } from '@microsoft/sp-lodash-subset';
 import { Field, FieldArray, Form, FormElement, FormRenderProps } from '@progress/kendo-react-form';
 import { DatePicker, DefaultButton, getTheme, Link, MessageBar, MessageBarType, PrimaryButton, ProgressIndicator, Separator, TextField } from '@fluentui/react';
 import { emailValidator } from '../../../HelperMethods/Validators';
-import { GetChoiceColumn, GetListOfActiveCommittees, OnFormatDate } from '../../../HelperMethods/MyHelperMethods';
+import { CreateNewMember, FormatDocumentSetPath, GetChoiceColumn, GetListOfActiveCommittees, OnFormatDate } from '../../../HelperMethods/MyHelperMethods';
 import { MyComboBox, PhoneInput, PostalCodeInput } from '../../../ClaringtonComponents/MyFormComponents';
 import { NewCommitteeMemberFormComponent } from '../../../ClaringtonComponents/NewCommitteeMemberFormComponent';
 
@@ -47,6 +47,46 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
     // });
   }
 
+  private _onSubmit = async (values: any) => {
+    try {
+      console.log('_onSubmit');
+      console.log(values);
+
+      this.setState({ saveStatus: NewMemberFormSaveStatus.CreatingNewMember });
+
+      // Step 1: Add the new member to the Members List.
+      let newMember_IAR = await CreateNewMember(values.Member);
+
+      console.log('new member add results.');
+      console.log(newMember_IAR);
+
+      // Step 2: Add the new member to committess if any are provided. 
+      if (values.Committees) {
+        this.setState({ saveStatus: NewMemberFormSaveStatus.AddingMemberToCommittee });
+        for (let committeeIndex = 0; committeeIndex < values.Committee.length; committeeIndex++) {
+          const currentCommittee = values.Committee[committeeIndex];
+          await CreateNewCommitteeMember(newMember_IAR.data.ID, values.Committees[committeeIndex]);
+          let linkToDocSet = await FormatDocumentSetPath(values.Committees[committeeIndex].CommitteeName, newMember_IAR.data.Title);
+          this.setState({
+            linkToCommitteeDocSet: [
+              ...this.state.linkToCommitteeDocSet,
+              {
+                CommitteeName: values.Committees[committeeIndex].CommitteeName,
+                MemberName: newMember_IAR.data.Title,
+                Link: linkToDocSet
+              }
+            ]
+          });
+        }
+      }
+      this.setState({ saveStatus: NewMemberFormSaveStatus.Success });
+    } catch (error) {
+      this.setState({ saveStatus: NewMemberFormSaveStatus.Error });
+      console.log("Something went wrong while saving new member!");
+      console.error(error);
+    }
+  }
+
   public render(): React.ReactElement<INewCommitteeMemberProps> {
 
     const reactTheme = getTheme();
@@ -59,21 +99,21 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
     return (
       <div>
         <Form
-          onSubmit={dateItem => console.log(dateItem)}
+          onSubmit={this._onSubmit}
           render={(formRenderProps: FormRenderProps) => (
             <FormElement>
               <h2>Add New Member</h2>
               <div style={{ padding: '10px', marginBottom: '10px', boxShadow: reactTheme.effects.elevation16 }}>
                 {/* <Field name={'Member.Salutation'} label={'Salutation'} component={TextField} /> */}
                 <Field name={'Member.FirstName'} label={'First Name'} required={true} component={TextField} />
-                <Field name={'Member.MiddleName'} label={'Middle Name'} component={TextField} />
+                {/* <Field name={'Member.MiddleName'} label={'Middle Name'} component={TextField} /> */}
                 <Field name={'Member.LastName'} label={'Last Name'} required={true} component={TextField} />
                 {/* <Field name={'Member.Birthday'} label={'Date of Birth'} component={DatePicker} formatDate={OnFormatDate} /> */}
 
                 <Field name={'Member.EMail'} label={'Email'} validator={emailValidator} component={EmailInput} />
                 <Field name={'Member.Email2'} label={'Email 2'} validator={emailValidator} component={EmailInput} />
 
-                <Field name={'Member.CellPhone1'} label={'Cell Phone'} component={PhoneInput} onChange={e => formRenderProps.onChange(e.name, e.value)} />
+                <Field name={'Member.CellPhone'} label={'Cell Phone'} component={PhoneInput} onChange={e => formRenderProps.onChange(e.name, e.value)} />
                 <Field name={'Member.WorkPhone'} label={'Work Phone'} component={PhoneInput} onChange={e => formRenderProps.onChange(e.name, e.value)} />
                 <Field name={'Member.HomePhone'} label={'Home Phone'} component={PhoneInput} onChange={e => formRenderProps.onChange(e.name, e.value)} />
 
@@ -155,3 +195,7 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
     );
   }
 }
+function CreateNewCommitteeMember(ID: any, arg1: any) {
+  throw new Error('Function not implemented.');
+}
+

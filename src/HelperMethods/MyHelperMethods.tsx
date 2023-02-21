@@ -10,12 +10,13 @@ import "@pnp/sp/folders";
 import "@pnp/sp/security";
 import ICommitteeFileItem from "../ClaringtonInterfaces/ICommitteeFileItem";
 import { MyLists } from "./MyLists";
-import { IItems } from "@pnp/sp/items";
+import { IItemAddResult, IItems } from "@pnp/sp/items";
+import IMemberListItem from "../ClaringtonInterfaces/IMemberListItem";
 
 let _sp: SPFI = null;
 
-export const getSP = (context?: WebPartContext) : SPFI => {
-    if(_sp === null && context !== null) {
+export const getSP = (context?: WebPartContext): SPFI => {
+    if (_sp === null && context !== null) {
         _sp = spfi().using(SPFx(context));
     }
     return _sp;
@@ -33,7 +34,7 @@ export const COMMITTEE_FILE_CONTENT_TYPE_ID = "0x0120D52000DA0D74B289281E4CBF236
  * @param date Date input from Fluent UI DatePicker
  * @returns Month/Day/Year as a string.
  */
- export const OnFormatDate = (date?: Date): string => {
+export const OnFormatDate = (date?: Date): string => {
     return !date ? '' : (date.getMonth() + 1) + '/' + date.getDate() + '/' + (date.getFullYear());
 };
 
@@ -61,6 +62,14 @@ export const CheckForExistingDocumentSetByServerRelativePath = async (serverRela
 export const CalculateTermEndDate = (startDate: Date, termLength: number): Date => {
     return new Date(startDate.getFullYear() + termLength, startDate.getMonth(), startDate.getDate());
 };
+
+/**
+ * Format members Full Name/ Title.
+ * @param firstName Members First Name.
+ * @param lastName Members Last Name.
+ * @returns "lastName, firstName"
+ */
+ export const FormatMemberTitle = (firstName: string, lastName: string): string => { return `${lastName}, ${firstName}`; };
 
 /**
  * Calculate a committee members personal contact information retention period.
@@ -118,7 +127,7 @@ export const CalculateTermEndDate = (startDate: Date, termLength: number): Date 
 //         }
 
 //         termTotal = endDate.getFullYear() - startDate.getFullYear();
-        
+
 //         // Add to the running total.
 //         totalYears += termTotal;
 //     }
@@ -188,5 +197,16 @@ export const GetMember = async (id: number): Promise<any> => await getSP().web.l
  * @returns ICommitteeMemberHistoryListItem[]
  */
 // export const GetMembersTermHistory = async (id: number): Promise<ICommitteeMemberHistoryListItem[]> => await sp.web.lists.getByTitle(MyLists.CommitteeMemberHistory).items.filter(`MemberID eq ${id}`).get();
+
+//#region Create
+export const CreateNewMember = async (member: IMemberListItem): Promise<IItemAddResult> => {
+    const sp = getSP();
+
+    member.Title = FormatMemberTitle(member.FirstName, member.LastName);
+    // add an item to the list
+    let iar = await sp.web.lists.getByTitle(MyLists.Members).items.add(member);
+    return iar;
+};
+//#endregion
 
 //#endregion
