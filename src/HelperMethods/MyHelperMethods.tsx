@@ -23,6 +23,7 @@ export const getSP = (context?: WebPartContext) : SPFI => {
 
 //#region Constants
 export const FORM_DATA_INDEX = "formDataIndex";
+export const COMMITTEE_FILE_CONTENT_TYPE_ID = "0x0120D52000DA0D74B289281E4CBF23681415CE96AF";
 //#endregion
 
 
@@ -43,13 +44,13 @@ export const FORM_DATA_INDEX = "formDataIndex";
  * @returns Path to Document set as string.
  */
 export const FormatDocumentSetPath = async (libraryTitle: string, title: string): Promise<string> => {
-    let sp = getSP();
+    const sp = getSP();
     let library = await sp.web.lists.getByTitle(libraryTitle).select('Title', 'RootFolder/ServerRelativeUrl').expand('RootFolder')();
     return `${library.RootFolder.ServerRelativeUrl}/${title}`;
 };
 
 export const CheckForExistingDocumentSetByServerRelativePath = async (serverRelativePath: string): Promise<boolean> => {
-    let sp = getSP();
+    const sp = getSP();
     return await (await sp.web.getFolderByServerRelativePath(serverRelativePath).select('Exists')()).Exists;
 };
 
@@ -129,7 +130,7 @@ export const CalculateTermEndDate = (startDate: Date, termLength: number): Date 
 
 //#region Read
 export const GetChoiceColumn = async (listTitle: string, columnName: string): Promise<string[]> => {
-    let sp = getSP();
+    const sp = getSP();
     try {
         let choiceColumn: any = await sp.web.lists.getByTitle(listTitle).fields.getByTitle(columnName).select('Choices');
         return choiceColumn.Choices;
@@ -146,9 +147,9 @@ export const GetChoiceColumn = async (listTitle: string, columnName: string): Pr
  * @returns CommitteeFiles Document Set metadata. 
  */
 export const GetCommitteeByName = async (committeeName: string): Promise<ICommitteeFileItem> => {
-    let sp = getSP();
+    const sp = getSP();
     try {
-        let output: any = await sp.web.lists.getByTitle(MyLists.CommitteeFiles).items.filter(`Title eq '${committeeName}'`);
+        let output: any = await sp.web.lists.getByTitle(MyLists.CommitteeDocuments).items.filter(`Title eq '${committeeName}'`);
 
         if (output && output.length === 1) {
             return output[0];
@@ -165,13 +166,17 @@ export const GetCommitteeByName = async (committeeName: string): Promise<ICommit
 
 export const GetListOfActiveCommittees = async (): Promise<any> => {
     // TODO: Remove hard coded content type id.
-    let sp = getSP();
-    return await sp.web.lists.getByTitle(MyLists.CommitteeFiles).items.filter("OData__Status eq 'Active' and ContentTypeId eq '0x0120D52000BD403A8C219D9A40B835B291EFC822540092D9BC58A61C004084D3AAF8347D14E3'");
+    const sp = getSP();
+    debugger;
+    let output = await sp.web.lists.getByTitle(MyLists.CommitteeDocuments).items.filter(`OData__Status eq 'Active' and ContentTypeId eq '${COMMITTEE_FILE_CONTENT_TYPE_ID}'`)();
+
+    debugger;
+    return output;
 };
 
 
 // export const GetLibraryContentTypes = async (libraryTitle: string): Promise<string> => {
-//     let sp = getSP();
+//     const sp = getSP();
 //     let library = await sp.web.lists.getByTitle(libraryTitle);
 //     return (await library.contentTypes()).find((f: IContentTypeInfo) => f.Group === "Custom Content Types" && f.StringId.includes('0x0120')).StringId;
 // };

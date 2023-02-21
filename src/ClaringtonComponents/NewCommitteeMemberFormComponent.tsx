@@ -28,15 +28,14 @@ export interface INewCommitteeMemberFormItemState {
     calculatedEndDate?: Date;
 }
 
-export interface INewCommitteeMemberFormItemState {
-    positions: string[];
-    status: string[];
-    committeeFileItem?: ICommitteeFileItem;
-    selectedStartDate?: Date;
-    calculatedEndDate?: Date;
+export interface INewCommitteeMemberFormItemProps {
+    dataItem: any;
+    formRenderProps: any;
+    listViewContext: any;
+    context: any;
 }
 
-export class NewCommitteeMemberFormItem extends React.Component<any, INewCommitteeMemberFormItemState> {
+export class NewCommitteeMemberFormItem extends React.Component<INewCommitteeMemberFormItemProps, INewCommitteeMemberFormItemState> {
     constructor(props: any) {
         super(props);
         console.log(props);
@@ -166,7 +165,7 @@ export class NewCommitteeMemberFormItem extends React.Component<any, INewCommitt
                 <ul>
                     {
                         this.props.formRenderProps.valueGetter(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}].Files`)
-                            ?.map((f: any, index: any) => {
+                            ?.map((f: any, index: number) => {
                                 return <li>
                                     <span>{f.fileName}</span>
                                     <IconButton

@@ -39,6 +39,8 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
     };
 
     GetListOfActiveCommittees().then(value => {
+      console.log('Active Committees');
+      console.log(value);
       this.setState({ activeCommittees: value });
     });
 
@@ -48,13 +50,6 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
   }
 
   public render(): React.ReactElement<INewCommitteeMemberProps> {
-    const {
-      description,
-      isDarkTheme,
-      environmentMessage,
-      hasTeamsContext,
-      userDisplayName
-    } = this.props;
 
     const reactTheme = getTheme();
 

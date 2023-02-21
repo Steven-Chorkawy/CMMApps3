@@ -11,6 +11,7 @@ import { IReadonlyTheme } from '@microsoft/sp-component-base';
 import * as strings from 'NewCommitteeMemberWebPartStrings';
 import NewCommitteeMember from './components/NewCommitteeMember';
 import { INewCommitteeMemberProps } from './components/INewCommitteeMemberProps';
+import { getSP } from '../../HelperMethods/MyHelperMethods';
 
 export interface INewCommitteeMemberWebPartProps {
   description: string;
@@ -40,7 +41,9 @@ export default class NewCommitteeMemberWebPart extends BaseClientSideWebPart<INe
   protected onInit(): Promise<void> {
     this._environmentMessage = this._getEnvironmentMessage();
 
-    return super.onInit();
+    return super.onInit().then(() => {
+      getSP(this.context);
+    });
   }
 
   private _getEnvironmentMessage(): string {
