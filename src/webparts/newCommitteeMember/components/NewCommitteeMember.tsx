@@ -65,13 +65,13 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
         this.setState({ saveStatus: NewMemberFormSaveStatus.AddingMemberToCommittee });
         for (let committeeIndex = 0; committeeIndex < values.Committee.length; committeeIndex++) {
           const currentCommittee = values.Committee[committeeIndex];
-          await CreateNewCommitteeMember(newMember_IAR.data.ID, values.Committees[committeeIndex]);
-          let linkToDocSet = await FormatDocumentSetPath(values.Committees[committeeIndex].CommitteeName, newMember_IAR.data.Title);
+          await CreateNewCommitteeMember(newMember_IAR.data.ID, currentCommittee);
+          let linkToDocSet = await FormatDocumentSetPath(currentCommittee.CommitteeName, newMember_IAR.data.Title);
           this.setState({
             linkToCommitteeDocSet: [
               ...this.state.linkToCommitteeDocSet,
               {
-                CommitteeName: values.Committees[committeeIndex].CommitteeName,
+                CommitteeName: currentCommittee.CommitteeName,
                 MemberName: newMember_IAR.data.Title,
                 Link: linkToDocSet
               }
