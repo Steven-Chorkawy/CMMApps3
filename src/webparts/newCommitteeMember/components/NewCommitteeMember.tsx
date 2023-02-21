@@ -39,8 +39,6 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
     };
 
     GetListOfActiveCommittees().then(value => {
-      console.log('Active Committees');
-      console.log(value);
       this.setState({ activeCommittees: value });
     });
 

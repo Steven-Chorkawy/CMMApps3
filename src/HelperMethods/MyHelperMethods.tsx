@@ -74,10 +74,10 @@ export const CalculateTermEndDate = (startDate: Date, termLength: number): Date 
 //     const RETENTION_PERIOD = 5; // Retention is 5 years + last Term End Date.
 //     let memberHistory = await sp.web.lists.getByTitle(MyLists.CommitteeMemberHistory).items
 //         .filter(`SPFX_CommitteeMemberDisplayNameId eq ${memberId}`)
-//         .orderBy('OData__EndDate', false).get();
+//         .orderBy('TermEndDate', false).get();
 
 //     if (memberHistory && memberHistory.length > 0) {
-//         let tmpDate = new Date(memberHistory[0].OData__EndDate);
+//         let tmpDate = new Date(memberHistory[0].TermEndDate);
 //         output = new Date(tmpDate.getFullYear() + RETENTION_PERIOD, tmpDate.getMonth(), tmpDate.getDate());
 //         committeeName = memberHistory[0].CommitteeName;
 //     }
@@ -102,7 +102,7 @@ export const CalculateTermEndDate = (startDate: Date, termLength: number): Date 
 
 //         const term = committeeTerms[termIndex];
 //         let startDate = new Date(term.StartDate),
-//             endDate = new Date(term.OData__EndDate),
+//             endDate = new Date(term.TermEndDate),
 //             today = new Date();
 
 //         console.log(term);
@@ -132,7 +132,7 @@ export const CalculateTermEndDate = (startDate: Date, termLength: number): Date 
 export const GetChoiceColumn = async (listTitle: string, columnName: string): Promise<string[]> => {
     const sp = getSP();
     try {
-        let choiceColumn: any = await sp.web.lists.getByTitle(listTitle).fields.getByTitle(columnName).select('Choices');
+        let choiceColumn: any = await sp.web.lists.getByTitle(listTitle).fields.getByTitle(columnName).select('Choices')();
         return choiceColumn.Choices;
     } catch (error) {
         console.log('Something went wrong in GetChoiceColumn!');
@@ -149,7 +149,7 @@ export const GetChoiceColumn = async (listTitle: string, columnName: string): Pr
 export const GetCommitteeByName = async (committeeName: string): Promise<ICommitteeFileItem> => {
     const sp = getSP();
     try {
-        let output: any = await sp.web.lists.getByTitle(MyLists.CommitteeDocuments).items.filter(`Title eq '${committeeName}'`);
+        let output: any = await sp.web.lists.getByTitle(MyLists.CommitteeDocuments).items.filter(`Title eq '${committeeName}'`)();
 
         if (output && output.length === 1) {
             return output[0];
@@ -167,10 +167,7 @@ export const GetCommitteeByName = async (committeeName: string): Promise<ICommit
 export const GetListOfActiveCommittees = async (): Promise<any> => {
     // TODO: Remove hard coded content type id.
     const sp = getSP();
-    debugger;
     let output = await sp.web.lists.getByTitle(MyLists.CommitteeDocuments).items.filter(`OData__Status eq 'Active' and ContentTypeId eq '${COMMITTEE_FILE_CONTENT_TYPE_ID}'`)();
-
-    debugger;
     return output;
 };
 
