@@ -104,11 +104,8 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
             <FormElement>
               <h2>Add New Member</h2>
               <div style={{ padding: '10px', marginBottom: '10px', boxShadow: reactTheme.effects.elevation16 }}>
-                {/* <Field name={'Member.Salutation'} label={'Salutation'} component={TextField} /> */}
                 <Field name={'Member.FirstName'} label={'First Name'} required={true} component={TextField} />
-                {/* <Field name={'Member.MiddleName'} label={'Middle Name'} component={TextField} /> */}
                 <Field name={'Member.LastName'} label={'Last Name'} required={true} component={TextField} />
-                {/* <Field name={'Member.Birthday'} label={'Date of Birth'} component={DatePicker} formatDate={OnFormatDate} /> */}
 
                 <Field name={'Member.EMail'} label={'Email'} validator={emailValidator} component={EmailInput} />
                 <Field name={'Member.Email2'} label={'Email 2'} validator={emailValidator} component={EmailInput} />
@@ -119,13 +116,7 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
 
                 <Field name={'Member.WorkAddress'} label={'Street Address'} component={TextField} />
                 <Field name={'Member.WorkCity'} label={'City'} component={TextField} />
-                <Field name={'Member.PostalCode'} label={'Postal Code'} component={PostalCodeInput} onChange={e => formRenderProps.onChange(e.name, e.value)} />
-                {/** !!! TODO: Get these values from SharePoint, not hard coded.  */}
-                {/* <Field name={'Member.Province'}
-                  label={'Province'}
-                  component={MyComboBox}
-                  options={this.state.provinces ? this.state.provinces.map(f => { return { key: f, text: f }; }) : []}
-                /> */}
+                <Field name={'Member.PostalCode'} label={'Postal Code'} component={PostalCodeInput} onChange={e => formRenderProps.onChange(e.name, e.value)} />          
               </div>
               <h2>Add "{formRenderProps.valueGetter('Member.FirstName')} {formRenderProps.valueGetter('Member.LastName')}" to Committee</h2>
               {
