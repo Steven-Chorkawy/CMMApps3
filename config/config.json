@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "new-committee-member-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/newCommitteeMember/NewCommitteeMemberWebPart.js",
+          "manifest": "./src/webparts/newCommitteeMember/NewCommitteeMemberWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "NewCommitteeMemberWebPartStrings": "lib/webparts/newCommitteeMember/loc/{locale}.js"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "cmm-apps-client-side-solution",
+    "id": "1cdf0197-80d6-41f7-8b93-f190a7ec0fca",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.15.2"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "cmm-apps description"
+      },
+      "longDescription": {
+        "default": "cmm-apps description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "cmm-apps Feature",
+        "description": "The feature that activates elements of the cmm-apps solution.",
+        "id": "d3786063-c966-4925-8a6f-51b51d28890c",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/cmm-apps.sppkg"
+  }
+}

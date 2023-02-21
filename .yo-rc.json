@@ -1,0 +1,16 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "version": "1.15.2",
+    "libraryName": "cmm-apps",
+    "libraryId": "1cdf0197-80d6-41f7-8b93-f190a7ec0fca",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "cmm-apps",
+    "solutionShortDescription": "cmm-apps description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}
