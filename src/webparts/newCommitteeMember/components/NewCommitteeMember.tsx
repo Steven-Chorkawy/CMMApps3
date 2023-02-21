@@ -5,7 +5,7 @@ import { escape } from '@microsoft/sp-lodash-subset';
 import { Field, FieldArray, Form, FormElement, FormRenderProps } from '@progress/kendo-react-form';
 import { DatePicker, DefaultButton, getTheme, Link, MessageBar, MessageBarType, PrimaryButton, ProgressIndicator, Separator, TextField } from '@fluentui/react';
 import { emailValidator } from '../../../HelperMethods/Validators';
-import { OnFormatDate } from '../../../HelperMethods/MyHelperMethods';
+import { GetChoiceColumn, GetListOfActiveCommittees, OnFormatDate } from '../../../HelperMethods/MyHelperMethods';
 import { MyComboBox, PhoneInput, PostalCodeInput } from '../../../ClaringtonComponents/MyFormComponents';
 import { NewCommitteeMemberFormComponent } from '../../../ClaringtonComponents/NewCommitteeMemberFormComponent';
 
@@ -21,12 +21,32 @@ export enum NewMemberFormSaveStatus {
 
 export interface INewMemberFormState {
   activeCommittees: any[];
-  provinces: any[];
+  // provinces: any[];
   saveStatus: NewMemberFormSaveStatus;
   linkToCommitteeDocSet: any[];
 }
 
 export default class NewCommitteeMember extends React.Component<INewCommitteeMemberProps, INewMemberFormState> {
+
+  constructor(props: any) {
+    super(props);
+
+    this.state = {
+      activeCommittees: [],
+      // provinces: [],
+      saveStatus: NewMemberFormSaveStatus.NewForm,
+      linkToCommitteeDocSet: []
+    };
+
+    GetListOfActiveCommittees().then(value => {
+      this.setState({ activeCommittees: value });
+    });
+
+    // GetChoiceColumn('Members', 'Province').then(value => {
+    //   this.setState({ provinces: value });
+    // });
+  }
+
   public render(): React.ReactElement<INewCommitteeMemberProps> {
     const {
       description,
@@ -46,16 +66,16 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
     return (
       <div>
         <Form
-          onSubmit={(values) => { console.log('onsubmit'); console.log(values); }}
-          render={(formRenderProps: FormRenderProps) => {
+          onSubmit={dateItem => console.log(dateItem)}
+          render={(formRenderProps: FormRenderProps) => (
             <FormElement>
               <h2>Add New Member</h2>
               <div style={{ padding: '10px', marginBottom: '10px', boxShadow: reactTheme.effects.elevation16 }}>
-                <Field name={'Member.Salutation'} label={'Salutation'} component={TextField} />
+                {/* <Field name={'Member.Salutation'} label={'Salutation'} component={TextField} /> */}
                 <Field name={'Member.FirstName'} label={'First Name'} required={true} component={TextField} />
                 <Field name={'Member.MiddleName'} label={'Middle Name'} component={TextField} />
                 <Field name={'Member.LastName'} label={'Last Name'} required={true} component={TextField} />
-                <Field name={'Member.Birthday'} label={'Date of Birth'} component={DatePicker} formatDate={OnFormatDate} />
+                {/* <Field name={'Member.Birthday'} label={'Date of Birth'} component={DatePicker} formatDate={OnFormatDate} /> */}
 
                 <Field name={'Member.EMail'} label={'Email'} validator={emailValidator} component={EmailInput} />
                 <Field name={'Member.Email2'} label={'Email 2'} validator={emailValidator} component={EmailInput} />
@@ -68,11 +88,11 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
                 <Field name={'Member.WorkCity'} label={'City'} component={TextField} />
                 <Field name={'Member.PostalCode'} label={'Postal Code'} component={PostalCodeInput} onChange={e => formRenderProps.onChange(e.name, e.value)} />
                 {/** !!! TODO: Get these values from SharePoint, not hard coded.  */}
-                <Field name={'Member.Province'}
+                {/* <Field name={'Member.Province'}
                   label={'Province'}
                   component={MyComboBox}
                   options={this.state.provinces ? this.state.provinces.map(f => { return { key: f, text: f }; }) : []}
-                />
+                /> */}
               </div>
               <h2>Add "{formRenderProps.valueGetter('Member.FirstName')} {formRenderProps.valueGetter('Member.LastName')}" to Committee</h2>
               {
@@ -136,7 +156,7 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
                 />
               </div>
             </FormElement>
-          }}
+          )}
         />
       </div>
     );
