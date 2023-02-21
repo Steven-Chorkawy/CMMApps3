@@ -4,4 +4,5 @@ export interface INewCommitteeMemberProps {
   environmentMessage: string;
   hasTeamsContext: boolean;
   userDisplayName: string;
+  context: any;
 }
