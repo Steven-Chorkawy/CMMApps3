@@ -8,7 +8,7 @@ import "@pnp/sp/fields";
 import "@pnp/sp/files";
 import "@pnp/sp/folders";
 import "@pnp/sp/security";
-import { ContentType, IContentType } from "@pnp/sp/content-types";
+import { ContentType, IContentType, IContentTypeInfo } from "@pnp/sp/content-types";
 
 import ICommitteeFileItem from "../ClaringtonInterfaces/ICommitteeFileItem";
 import { MyLists } from "./MyLists";
@@ -187,22 +187,8 @@ export const GetListOfActiveCommittees = async (): Promise<any> => {
 export const GetLibraryContentTypes = async (libraryTitle: string): Promise<string> => {
     const sp = getSP();
     let library = await sp.web.lists.getByTitle(libraryTitle);
+    return (await library.contentTypes()).find((f: IContentTypeInfo) => f.Group === "Custom Content Types" && f.StringId.includes('0x0120')).StringId;;
 
-    let contentTypes = await library.contentTypes();
-    console.log(contentTypes);
-
-    
-    debugger;
-
-    return "";
-    //return (await library.contentTypes()).find((f: IContentTypeInfo) => f.Group === "Custom Content Types" && f.StringId.includes('0x0120')).StringId;
-
-
-    // sp.web.lists.getByTitle(libraryTitle).contentTypes.select("Name").get().then((contentTypes) => {
-    //     console.log(contentTypes);
-    //   }).catch((error) => {
-    //     console.log(error);
-    //   });
 };
 
 // export const GetMembers = async (): Promise<IMemberListItem[]> => await sp.web.lists.getByTitle(MyLists.Members).items.getAll();
@@ -236,7 +222,6 @@ export const CreateNewMember = async (member: IMemberListItem): Promise<IItemAdd
  */
 export const CreateNewCommitteeMember = async (memberId: number, committee: any): Promise<void> => {
     const sp = getSP();
-
     if (!committee) {
         throw "No Committee provided.";
     }
@@ -248,22 +233,20 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
     let docSet = await (await CreateDocumentSet({ LibraryTitle: committee.CommitteeName, Title: member.Title })).item();
 
     // Step 2: Update Metadata.
-    sp.web.lists.getByTitle(committee.CommitteeName).items.getById(docSet.ID).update({
-        OData__EndDate: committee._EndDate,
-        StartDate: committee.StartDate,
+    await sp.web.lists.getByTitle(committee.CommitteeName).items.getById(docSet.ID).update({
         Position: committee.Position,
         OData__Status: committee._Status,
-        SPFX_CommitteeMemberDisplayNameId: memberId
+        TermEndDate: committee.TermEndDate,
+        TermStartDate0: committee.StartDate,
+        //     //SPFX_CommitteeMemberDisplayNameId: memberId
     });
 
     // Step 3: Upload Attachments. 
     if (committee.Files) {
         committee.Files.map((file: any) => {
-            debugger;
-            console.log(file); // what is file.fileName?
-            // file.downloadFileContent().then((fileContent: any) => {
-            //     sp.web.getFolderByServerRelativePath(PATH_TO_DOC_SET).files.add(file.fileName, fileContent, true);
-            // });
+            file.downloadFileContent().then((fileContent: any) => {
+                sp.web.getFolderByServerRelativePath(PATH_TO_DOC_SET).files.addUsingPath(file.fileName, fileContent, { Overwrite: true });
+            });
         });
     }
 
