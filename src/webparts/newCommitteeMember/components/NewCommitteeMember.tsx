@@ -5,7 +5,7 @@ import { escape } from '@microsoft/sp-lodash-subset';
 import { Field, FieldArray, Form, FormElement, FormRenderProps } from '@progress/kendo-react-form';
 import { DatePicker, DefaultButton, getTheme, Link, MessageBar, MessageBarType, PrimaryButton, ProgressIndicator, Separator, TextField } from '@fluentui/react';
 import { emailValidator } from '../../../HelperMethods/Validators';
-import { CreateNewMember, FormatDocumentSetPath, GetChoiceColumn, GetListOfActiveCommittees, OnFormatDate } from '../../../HelperMethods/MyHelperMethods';
+import { CreateNewCommitteeMember, CreateNewMember, FormatDocumentSetPath, GetChoiceColumn, GetListOfActiveCommittees, OnFormatDate } from '../../../HelperMethods/MyHelperMethods';
 import { MyComboBox, PhoneInput, PostalCodeInput } from '../../../ClaringtonComponents/MyFormComponents';
 import { NewCommitteeMemberFormComponent } from '../../../ClaringtonComponents/NewCommitteeMemberFormComponent';
 
@@ -63,8 +63,8 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
       // Step 2: Add the new member to committess if any are provided. 
       if (values.Committees) {
         this.setState({ saveStatus: NewMemberFormSaveStatus.AddingMemberToCommittee });
-        for (let committeeIndex = 0; committeeIndex < values.Committee.length; committeeIndex++) {
-          const currentCommittee = values.Committee[committeeIndex];
+        for (let committeeIndex = 0; committeeIndex < values.Committees.length; committeeIndex++) {
+          const currentCommittee = values.Committees[committeeIndex];
           await CreateNewCommitteeMember(newMember_IAR.data.ID, currentCommittee);
           let linkToDocSet = await FormatDocumentSetPath(currentCommittee.CommitteeName, newMember_IAR.data.Title);
           this.setState({
@@ -186,7 +186,3 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
     );
   }
 }
-function CreateNewCommitteeMember(ID: any, arg1: any) {
-  throw new Error('Function not implemented.');
-}
-
