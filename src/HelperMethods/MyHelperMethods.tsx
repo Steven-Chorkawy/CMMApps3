@@ -27,7 +27,9 @@ export const getSP = (context?: WebPartContext): SPFI => {
 
 //#region Constants
 export const FORM_DATA_INDEX = "formDataIndex";
-export const COMMITTEE_FILE_CONTENT_TYPE_ID = "0x0120D52000DA0D74B289281E4CBF23681415CE96AF";
+
+// Content Type ID of the Document Set found in the Committees Document Library. 
+export const COMMITTEE_FILE_CONTENT_TYPE_ID = "0x0120D5200038D10D0D1AF55A4DB6F57F794DB8B0CD";
 //#endregion
 
 
@@ -180,6 +182,8 @@ export const GetListOfActiveCommittees = async (): Promise<any> => {
     // TODO: Remove hard coded content type id.
     const sp = getSP();
     let output = await sp.web.lists.getByTitle(MyLists.CommitteeDocuments).items.filter(`OData__Status eq 'Active' and ContentTypeId eq '${COMMITTEE_FILE_CONTENT_TYPE_ID}'`)();
+    console.log('Active Committees:');
+    console.log(output);
     return output;
 };
 
@@ -236,7 +240,7 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
     await sp.web.lists.getByTitle(committee.CommitteeName).items.getById(docSet.ID).update({
         Position: committee.Position,
         OData__Status: committee._Status,
-        TermEndDate: committee.TermEndDate,
+        _EndDate: committee._EndDate,
         TermStartDate0: committee.StartDate,
         //     //SPFX_CommitteeMemberDisplayNameId: memberId
     });

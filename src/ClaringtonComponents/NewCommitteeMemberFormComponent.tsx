@@ -70,7 +70,7 @@ export class NewCommitteeMemberFormItem extends React.Component<INewCommitteeMem
         GetChoiceColumn(e.value, 'Status').then(f => this.setState({ status: f }));
         GetChoiceColumn(e.value, 'Position').then(f => this.setState({ positions: f }));
         GetCommitteeByName(e.value).then(f => this.setState({ committeeFileItem: f }));
-        this.props.formRenderProps.onChange(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}].TermEndDate`, { value: '' });
+        this.props.formRenderProps.onChange(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}]._EndDate`, { value: '' });
         this.props.formRenderProps.onChange(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}].StartDate`, { value: '' });
         this.props.formRenderProps.onChange(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}]._Status`, { value: '' });
         this.props.formRenderProps.onChange(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}].Position`, { value: '' });
@@ -127,20 +127,19 @@ export class NewCommitteeMemberFormItem extends React.Component<INewCommitteeMem
                             calculatedEndDate: calcEndDate
                         });
 
-                        this.props.formRenderProps.onChange(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}].TermEndDate`, { value: calcEndDate });
+                        this.props.formRenderProps.onChange(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}]._EndDate`, { value: calcEndDate });
                     }}
                     disabled={!this.state.committeeFileItem}
                     required={true}
-                    validator={value => value ? "" : "Please Select a Stat Date."}
+                    validator={value => value ? "" : "Please Select a Start Date."}
                 />
                 {
                     this.state.calculatedEndDate &&
                     <Field
-                        name={`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}].TermEndDate`}
+                        name={`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}]._EndDate`}
                         label={'Term End Date'}
                         formatDate={OnFormatDate}
                         component={DatePicker}
-                        disabled={true} // Should always be disabled.
                     />
                 }
                 {
@@ -202,7 +201,7 @@ export class NewCommitteeMemberFormComponent extends React.Component<INewCommitt
             value: {
                 CommitteeName: '',
                 StartDate: '',
-                TermEndDate: '',
+                _EndDate: '',
                 _Status: '',
                 Position: ''
             },
