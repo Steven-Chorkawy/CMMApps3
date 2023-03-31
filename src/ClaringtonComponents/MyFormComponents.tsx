@@ -1,9 +1,7 @@
 import * as React from "react";
-import { DefaultButton, PrimaryButton, TextField, MaskedTextField, ComboBox, DatePicker } from '@fluentui/react';
+import { MaskedTextField, ComboBox, DatePicker } from '@fluentui/react';
 
-
-
-export const MyComboBox = (fieldRenderProps: any) => {
+export const MyComboBox = (fieldRenderProps: any): any => {
     const {
         label,
         options,
@@ -35,7 +33,7 @@ export const MyComboBox = (fieldRenderProps: any) => {
     </div>;
 };
 
-export const MyDatePicker = (fieldRenderProps: any) => {
+export const MyDatePicker = (fieldRenderProps: any): any => {
     return <div>
         <DatePicker
             {...fieldRenderProps}
@@ -60,13 +58,13 @@ export const MyDatePicker = (fieldRenderProps: any) => {
      * @param fieldRenderProps Kendo UI Field Render Props from form.
      * @returns MaskedTextField element.
      */
-export const MyMaskedInput = (fieldRenderProps: any) => {
+export const MyMaskedInput = (fieldRenderProps: any): any => {
     return <MaskedTextField
         {...fieldRenderProps}
         onChange={(event, newValue) => fieldRenderProps.onChange({ name: fieldRenderProps.name, value: { value: newValue } })}
     />;
 };
 
-export const PhoneInput = (fieldRenderProps: any) => <MyMaskedInput {...fieldRenderProps} mask="(999) 999-9999" />;
+export const PhoneInput = (fieldRenderProps: any): any => <MyMaskedInput {...fieldRenderProps} mask="(999) 999-9999" />;
 
-export const PostalCodeInput = (fieldRenderProps: any) => <MyMaskedInput {...fieldRenderProps} mask="a9a 9a9" />;
+export const PostalCodeInput = (fieldRenderProps: any): any => <MyMaskedInput {...fieldRenderProps} mask="a9a 9a9" />;

@@ -8,12 +8,12 @@ import "@pnp/sp/fields";
 import "@pnp/sp/files";
 import "@pnp/sp/folders";
 import "@pnp/sp/security";
-import { ContentType, IContentType, IContentTypeInfo } from "@pnp/sp/content-types";
+import { IContentTypeInfo } from "@pnp/sp/content-types";
 
 
 import ICommitteeFileItem from "../ClaringtonInterfaces/ICommitteeFileItem";
 import { MyLists } from "./MyLists";
-import { IItemAddResult, IItems, IItemUpdateResult } from "@pnp/sp/items";
+import { IItemAddResult, IItemUpdateResult } from "@pnp/sp/items";
 import IMemberListItem from "../ClaringtonInterfaces/IMemberListItem";
 import { IFolderAddResult } from "@pnp/sp/folders";
 
@@ -33,6 +33,12 @@ export const FORM_DATA_INDEX = "formDataIndex";
 export const COMMITTEE_FILE_CONTENT_TYPE_ID = "0x0120D5200038D10D0D1AF55A4DB6F57F794DB8B0CD";
 //#endregion
 
+//#region
+export const CONSOLE_LOG_ERROR = (reason: any, customMessage?: string): void => {
+    console.error(customMessage ? customMessage : "Something went wrong!");
+    console.error(reason);
+};
+//#endregion
 
 //#region Formatters
 /**
@@ -52,7 +58,7 @@ export const OnFormatDate = (date?: Date): string => {
  */
 export const FormatDocumentSetPath = async (libraryTitle: string, title: string): Promise<string> => {
     const sp = getSP();
-    let library = await sp.web.lists.getByTitle(libraryTitle).select('Title', 'RootFolder/ServerRelativeUrl').expand('RootFolder')();
+    const library = await sp.web.lists.getByTitle(libraryTitle).select('Title', 'RootFolder/ServerRelativeUrl').expand('RootFolder')();
     return `${library.RootFolder.ServerRelativeUrl}/${title}`;
 };
 
@@ -147,7 +153,7 @@ export const FormatMemberTitle = (firstName: string, lastName: string): string =
 export const GetChoiceColumn = async (listTitle: string, columnName: string): Promise<string[]> => {
     const sp = getSP();
     try {
-        let choiceColumn: any = await sp.web.lists.getByTitle(listTitle).fields.getByTitle(columnName).select('Choices')();
+        const choiceColumn: any = await sp.web.lists.getByTitle(listTitle).fields.getByTitle(columnName).select('Choices')();
         return choiceColumn.Choices;
     } catch (error) {
         console.log('Something went wrong in GetChoiceColumn!');
@@ -164,13 +170,13 @@ export const GetChoiceColumn = async (listTitle: string, columnName: string): Pr
 export const GetCommitteeByName = async (committeeName: string): Promise<ICommitteeFileItem> => {
     const sp = getSP();
     try {
-        let output: any = await sp.web.lists.getByTitle(MyLists.CommitteeDocuments).items.filter(`Title eq '${committeeName}'`)();
+        const output: any = await sp.web.lists.getByTitle(MyLists.CommitteeDocuments).items.filter(`Title eq '${committeeName}'`)();
 
         if (output && output.length === 1) {
             return output[0];
         }
         else {
-            throw `Multiple '${committeeName}' found!`;
+            throw Error(`Multiple '${committeeName}' found!`);
         }
     } catch (error) {
         console.log('Something went wrong in GetChoiceColumn!');
@@ -180,19 +186,15 @@ export const GetCommitteeByName = async (committeeName: string): Promise<ICommit
 };
 
 export const GetListOfActiveCommittees = async (): Promise<any> => {
-    // TODO: Remove hard coded content type id.
     const sp = getSP();
-    let output = await sp.web.lists.getByTitle(MyLists.CommitteeDocuments).items.filter(`OData__Status eq 'Active' and ContentTypeId eq '${COMMITTEE_FILE_CONTENT_TYPE_ID}'`)();
-    console.log('Active Committees:');
-    console.log(output);
-    return output;
+    return await sp.web.lists.getByTitle(MyLists.CommitteeDocuments).items.filter(`OData__Status eq 'Active' and ContentTypeId eq '${COMMITTEE_FILE_CONTENT_TYPE_ID}'`)();
 };
 
 
 export const GetLibraryContentTypes = async (libraryTitle: string): Promise<string> => {
     const sp = getSP();
-    let library = await sp.web.lists.getByTitle(libraryTitle);
-    return (await library.contentTypes()).find((f: IContentTypeInfo) => f.Group === "Custom Content Types" && f.StringId.includes('0x0120')).StringId;;
+    const library = await sp.web.lists.getByTitle(libraryTitle);
+    return (await library.contentTypes()).find((f: IContentTypeInfo) => f.Group === "Custom Content Types" && f.StringId.includes('0x0120')).StringId;
 
 };
 
@@ -215,8 +217,36 @@ export const CreateNewMember = async (member: IMemberListItem): Promise<IItemAdd
 
     member.Title = FormatMemberTitle(member.FirstName, member.LastName);
     // add an item to the list
-    let iar = await sp.web.lists.getByTitle(MyLists.Members).items.add(member);
-    return iar;
+    return await sp.web.lists.getByTitle(MyLists.Members).items.add(member);
+};
+
+export const CreateDocumentSet = async (input: any): Promise<IItemUpdateResult> => {
+    let newFolderResult: IFolderAddResult;
+    const FOLDER_NAME = await FormatDocumentSetPath(input.LibraryTitle, input.Title);
+    let libraryDocumentSetContentTypeId;
+    const sp = getSP();
+
+    try {
+        libraryDocumentSetContentTypeId = await GetLibraryContentTypes(input.LibraryTitle);
+        if (!libraryDocumentSetContentTypeId) {
+            throw Error("Error! Cannot get content type for library.");
+        }
+
+        // Because sp.web.folders.add overwrites existing folder I have to do a manual check.
+        if (await CheckForExistingDocumentSetByServerRelativePath(FOLDER_NAME)) {
+            throw new Error(`Error! Cannot Create new Document Set. Duplicate Name detected. "${FOLDER_NAME}"`);
+        }
+
+        newFolderResult = await sp.web.folders.addUsingPath(FOLDER_NAME);
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+
+    const newFolderProperties = await sp.web.getFolderByServerRelativePath(newFolderResult.data.ServerRelativeUrl).listItemAllFields();
+    return await sp.web.lists.getByTitle(input.LibraryTitle).items.getById(newFolderProperties.ID).update({
+        ContentTypeId: libraryDocumentSetContentTypeId
+    });
 };
 
 /**
@@ -228,14 +258,14 @@ export const CreateNewMember = async (member: IMemberListItem): Promise<IItemAdd
 export const CreateNewCommitteeMember = async (memberId: number, committee: any): Promise<void> => {
     const sp = getSP();
     if (!committee) {
-        throw "No Committee provided.";
+        throw Error("No Committee provided.");
     }
 
-    let member = await sp.web.lists.getByTitle(MyLists.Members).items.getById(memberId)();
+    const member = await sp.web.lists.getByTitle(MyLists.Members).items.getById(memberId)();
     const PATH_TO_DOC_SET = await FormatDocumentSetPath(committee.CommitteeName, member.Title);
 
     // Step 1: Create the document set.
-    let docSet = await (await CreateDocumentSet({ LibraryTitle: committee.CommitteeName, Title: member.Title })).item();
+    const docSet = await (await CreateDocumentSet({ LibraryTitle: committee.CommitteeName, Title: member.Title })).item();
 
     // Step 2: Update Metadata.
     await sp.web.lists.getByTitle(committee.CommitteeName).items.getById(docSet.ID).update({
@@ -250,7 +280,10 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
     if (committee.Files) {
         committee.Files.map((file: any) => {
             file.downloadFileContent().then((fileContent: any) => {
-                sp.web.getFolderByServerRelativePath(PATH_TO_DOC_SET).files.addUsingPath(file.fileName, fileContent, { Overwrite: true });
+                sp.web.getFolderByServerRelativePath(PATH_TO_DOC_SET).files.addUsingPath(file.fileName, fileContent, { Overwrite: true }).catch(reason => {
+                    console.error('Failed to upload attachment');
+                    console.error(reason);
+                });
             });
         });
     }
@@ -269,35 +302,6 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
     //     MemberID: memberId,
     //     Title: `${member.FirstName} ${member.LastName}`
     // });
-};
-
-export const CreateDocumentSet = async (input: any): Promise<IItemUpdateResult> => {
-    let newFolderResult: IFolderAddResult;
-    let FOLDER_NAME = await FormatDocumentSetPath(input.LibraryTitle, input.Title);
-    let libraryDocumentSetContentTypeId;
-    const sp = getSP();
-
-    try {
-        libraryDocumentSetContentTypeId = await GetLibraryContentTypes(input.LibraryTitle);
-        if (!libraryDocumentSetContentTypeId) {
-            throw "Error! Cannot get content type for library.";
-        }
-
-        // Because sp.web.folders.add overwrites existing folder I have to do a manual check.
-        if (await CheckForExistingDocumentSetByServerRelativePath(FOLDER_NAME)) {
-            throw `Error! Cannot Create new Document Set. Duplicate Name detected. "${FOLDER_NAME}"`;
-        }
-
-        newFolderResult = await sp.web.folders.addUsingPath(FOLDER_NAME);
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-
-    let newFolderProperties = await sp.web.getFolderByServerRelativePath(newFolderResult.data.ServerRelativeUrl).listItemAllFields();
-    return await sp.web.lists.getByTitle(input.LibraryTitle).items.getById(newFolderProperties.ID).update({
-        ContentTypeId: libraryDocumentSetContentTypeId
-    });
 };
 //#endregion
 

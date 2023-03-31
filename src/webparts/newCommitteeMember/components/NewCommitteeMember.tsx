@@ -1,15 +1,11 @@
 import * as React from 'react';
-import styles from './NewCommitteeMember.module.scss';
 import { INewCommitteeMemberProps } from './INewCommitteeMemberProps';
-import { escape } from '@microsoft/sp-lodash-subset';
 import { Field, FieldArray, Form, FormElement, FormRenderProps } from '@progress/kendo-react-form';
-import { DatePicker, DefaultButton, getTheme, Link, MessageBar, MessageBarType, PrimaryButton, ProgressIndicator, Separator, TextField } from '@fluentui/react';
+import { DefaultButton, getTheme, Link, MessageBar, MessageBarType, PrimaryButton, ProgressIndicator, Separator, TextField } from '@fluentui/react';
 import { emailValidator } from '../../../HelperMethods/Validators';
-import { CreateNewCommitteeMember, CreateNewMember, FormatDocumentSetPath, GetChoiceColumn, GetListOfActiveCommittees, OnFormatDate } from '../../../HelperMethods/MyHelperMethods';
-import { MyComboBox, PhoneInput, PostalCodeInput } from '../../../ClaringtonComponents/MyFormComponents';
+import { CreateNewCommitteeMember, CreateNewMember, FormatDocumentSetPath, GetListOfActiveCommittees } from '../../../HelperMethods/MyHelperMethods';
+import { PhoneInput, PostalCodeInput } from '../../../ClaringtonComponents/MyFormComponents';
 import { NewCommitteeMemberFormComponent } from '../../../ClaringtonComponents/NewCommitteeMemberFormComponent';
-
-
 
 export enum NewMemberFormSaveStatus {
   NewForm = -1,
@@ -40,6 +36,9 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
 
     GetListOfActiveCommittees().then(value => {
       this.setState({ activeCommittees: value });
+    }).catch(reason => {
+      console.error('Something went wrong while getting list of active committees!');
+      console.error(reason);
     });
 
     // GetChoiceColumn('Members', 'Province').then(value => {
@@ -47,7 +46,7 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
     // });
   }
 
-  private _onSubmit = async (values: any) => {
+  private _onSubmit = async (values: any): Promise<void> => {
     try {
       console.log('_onSubmit');
       console.log(values);
@@ -55,7 +54,7 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
       this.setState({ saveStatus: NewMemberFormSaveStatus.CreatingNewMember });
 
       // Step 1: Add the new member to the Members List.
-      let newMember_IAR = await CreateNewMember(values.Member);
+      const newMember_IAR = await CreateNewMember(values.Member);
 
       console.log('new member add results.');
       console.log(newMember_IAR);
@@ -66,7 +65,7 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
         for (let committeeIndex = 0; committeeIndex < values.Committees.length; committeeIndex++) {
           const currentCommittee = values.Committees[committeeIndex];
           await CreateNewCommitteeMember(newMember_IAR.data.ID, currentCommittee);
-          let linkToDocSet = await FormatDocumentSetPath(currentCommittee.CommitteeName, newMember_IAR.data.Title);
+          const linkToDocSet = await FormatDocumentSetPath(currentCommittee.CommitteeName, newMember_IAR.data.Title);
           this.setState({
             linkToCommitteeDocSet: [
               ...this.state.linkToCommitteeDocSet,
@@ -91,7 +90,7 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
 
     const reactTheme = getTheme();
 
-    const EmailInput = (fieldRenderProps: any) => {
+    const EmailInput = (fieldRenderProps: any): any => {
       const { validationMessage, visited, ...others } = fieldRenderProps;
       return <TextField {...others} errorMessage={visited && validationMessage && validationMessage} />;
     };
@@ -116,9 +115,9 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
 
                 <Field name={'Member.WorkAddress'} label={'Street Address'} component={TextField} />
                 <Field name={'Member.WorkCity'} label={'City'} component={TextField} />
-                <Field name={'Member.PostalCode'} label={'Postal Code'} component={PostalCodeInput} onChange={e => formRenderProps.onChange(e.name, e.value)} />          
+                <Field name={'Member.PostalCode'} label={'Postal Code'} component={PostalCodeInput} onChange={e => formRenderProps.onChange(e.name, e.value)} />
               </div>
-              <h2>Add "{formRenderProps.valueGetter('Member.FirstName')} {formRenderProps.valueGetter('Member.LastName')}" to Committee</h2>
+              <h2>Add '{formRenderProps.valueGetter('Member.FirstName')} {formRenderProps.valueGetter('Member.LastName')}' to Committee</h2>
               {
                 this.state.activeCommittees.length > 0 &&
                 <FieldArray
@@ -147,8 +146,8 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
                   <div>
                     Success! New Committee Member has been saved.
                     {
-                      this.state.linkToCommitteeDocSet.map(l => {
-                        return <div>
+                      this.state.linkToCommitteeDocSet.map((l, index) => {
+                        return <div key={`${l.MemberName}${index}`}>
                           <Separator />
                           <Link href={`${l.Link}`} target="_blank" underline>Click to View: {l.MemberName} - {l.CommitteeName}</Link>
                         </div>;

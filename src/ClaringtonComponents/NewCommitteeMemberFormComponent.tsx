@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { Form, FormElement, Field, FormRenderProps, FieldArrayRenderProps, FieldArrayProps } from '@progress/kendo-react-form';
-import { DefaultButton, PrimaryButton, TextField, MaskedTextField, ComboBox, DatePicker, Calendar, getTheme } from '@fluentui/react';
+import { Field, FormRenderProps, FieldArrayProps } from '@progress/kendo-react-form';
+import { DatePicker, getTheme } from '@fluentui/react';
 import { ActionButton, IconButton } from 'office-ui-fabric-react';
 import { MyComboBox, MyDatePicker } from './MyFormComponents';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import ICommitteeFileItem from '../ClaringtonInterfaces/ICommitteeFileItem';
-import { CalculateTermEndDate, FORM_DATA_INDEX, GetChoiceColumn, GetCommitteeByName, OnFormatDate } from '../HelperMethods/MyHelperMethods';
+import { CalculateTermEndDate, CONSOLE_LOG_ERROR, FORM_DATA_INDEX, GetChoiceColumn, GetCommitteeByName, OnFormatDate } from '../HelperMethods/MyHelperMethods';
 import { ListView, ListViewHeader } from '@progress/kendo-react-listview';
 import { FilePicker, IFilePickerResult } from '@pnp/spfx-controls-react';
 
 export const NewCommitteeMemberContext = React.createContext<{
     parentField: string;
     activeCommittees: any[];
-    onRemove: Function;
+    onRemove: any;
 }>({} as any);
 
 export interface INewCommitteeMemberFormComponentProps extends FieldArrayProps {
@@ -50,7 +50,7 @@ export class NewCommitteeMemberFormItem extends React.Component<INewCommitteeMem
         }
     }
 
-    private _pushFileAttachment = (filePickerResult: IFilePickerResult[]) => {
+    private _pushFileAttachment = (filePickerResult: IFilePickerResult[]): void => {
         let currentFiles = this.props.formRenderProps.valueGetter(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}].Files`);
         if (!currentFiles)
             currentFiles = [];
@@ -58,25 +58,25 @@ export class NewCommitteeMemberFormItem extends React.Component<INewCommitteeMem
         this.props.formRenderProps.onChange(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}].Files`, { value: currentFiles });
     }
 
-    private _popFileAttachment = (index: number) => {
-        let currentFiles = this.props.formRenderProps.valueGetter(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}].Files`);
+    private _popFileAttachment = (index: number): void => {
+        const currentFiles = this.props.formRenderProps.valueGetter(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}].Files`);
         if (!currentFiles)
             return;
         currentFiles.splice(index, 1);
         this.props.formRenderProps.onChange(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}].Files`, { value: currentFiles });
     }
 
-    private _onSelectCommitteeChange = (e: any) => {
-        GetChoiceColumn(e.value, 'Status').then(f => this.setState({ status: f }));
-        GetChoiceColumn(e.value, 'Position').then(f => this.setState({ positions: f }));
-        GetCommitteeByName(e.value).then(f => this.setState({ committeeFileItem: f }));
+    private _onSelectCommitteeChange = (e: any): void => {
+        GetChoiceColumn(e.value, 'Status').then(f => this.setState({ status: f })).catch(CONSOLE_LOG_ERROR);
+        GetChoiceColumn(e.value, 'Position').then(f => this.setState({ positions: f })).catch(CONSOLE_LOG_ERROR);
+        GetCommitteeByName(e.value).then(f => this.setState({ committeeFileItem: f })).catch(CONSOLE_LOG_ERROR);
         this.props.formRenderProps.onChange(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}]._EndDate`, { value: '' });
         this.props.formRenderProps.onChange(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}].StartDate`, { value: '' });
         this.props.formRenderProps.onChange(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}]._Status`, { value: '' });
         this.props.formRenderProps.onChange(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}].Position`, { value: '' });
     }
 
-    public render() {
+    public render(): any {
         const reactTheme = getTheme();
         return (
             <div style={{ padding: '10px', marginBottom: '10px', boxShadow: reactTheme.effects.elevation16 }}>
@@ -122,12 +122,12 @@ export class NewCommitteeMemberFormItem extends React.Component<INewCommitteeMem
                     formatDate={OnFormatDate}
                     component={MyDatePicker}
                     onChange={e => {
-                        let calcEndDate = CalculateTermEndDate(e.value, this.state.committeeFileItem.TermLength);
+                        const CALC_END_DATE = CalculateTermEndDate(e.value, this.state.committeeFileItem.TermLength);
                         this.setState({
-                            calculatedEndDate: calcEndDate
+                            calculatedEndDate: CALC_END_DATE
                         });
 
-                        this.props.formRenderProps.onChange(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}]._EndDate`, { value: calcEndDate });
+                        this.props.formRenderProps.onChange(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}]._EndDate`, { value: CALC_END_DATE });
                     }}
                     disabled={!this.state.committeeFileItem}
                     required={true}
@@ -164,7 +164,7 @@ export class NewCommitteeMemberFormItem extends React.Component<INewCommitteeMem
                     {
                         this.props.formRenderProps.valueGetter(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}].Files`)
                             ?.map((f: any, index: number) => {
-                                return <li>
+                                return <li key={index}>
                                     <span>{f.fileName}</span>
                                     <IconButton
                                         iconProps={{ iconName: 'Delete' }}
@@ -195,7 +195,7 @@ export class NewCommitteeMemberFormComponent extends React.Component<INewCommitt
     }
 
     // Add a new item to the Form FieldArray that will be shown in the List
-    private onAdd = (e: any) => {
+    private onAdd = (e: any): void => {
         e.preventDefault();
         this.props.onPush({
             value: {
@@ -208,13 +208,13 @@ export class NewCommitteeMemberFormComponent extends React.Component<INewCommitt
         });
     }
 
-    private onRemove = (dataItem: any) => {
+    private onRemove = (dataItem: any): void => {
         this.props.onRemove({
             index: dataItem[FORM_DATA_INDEX],
         });
     }
 
-    private MyFooter = () => {
+    private MyFooter = (): any => {
         return (<ListViewHeader
             style={{
                 color: "rgb(160, 160, 160)",
@@ -226,14 +226,14 @@ export class NewCommitteeMemberFormComponent extends React.Component<INewCommitt
         </ListViewHeader>);
     }
 
-    private NewCommitteeMemberFormItem = (props: any) =>
+    private NewCommitteeMemberFormItem = (props: any): any =>
         <NewCommitteeMemberFormItem {...props} context={this.props.context} listViewContext={React.useContext(NewCommitteeMemberContext)} formRenderProps={this.props.formRenderProps} />
 
-    public render() {
+    public render(): any {
         const dataWithIndexes = this.props.value?.map((item: any, index: any) => {
             return { ...item, [FORM_DATA_INDEX]: index };
         });
-        const { validationMessage, visited, name, dataItemKey } = this.props;
+        const { name } = this.props;
         return (
             <NewCommitteeMemberContext.Provider value={{
                 parentField: name,
