@@ -16,6 +16,8 @@ import { MyLists } from "./MyLists";
 import { IItemAddResult, IItemUpdateResult } from "@pnp/sp/items";
 import IMemberListItem from "../ClaringtonInterfaces/IMemberListItem";
 import { IFolderAddResult } from "@pnp/sp/folders";
+import INewCommitteeMemberHistoryListItem from "../ClaringtonInterfaces/INewCommitteeMemberHistoryListItem";
+
 
 let _sp: SPFI = null;
 
@@ -89,22 +91,25 @@ export const FormatMemberTitle = (firstName: string, lastName: string): string =
  * @param memberId ID of the member that we are trying to calculate for.
  * @returns The date the members personal contact info should be deleted.
  */
-// export const CalculateMemberInfoRetention = async (memberId: number): Promise<{ date, committee }> => {
-//     let output: Date = undefined;
-//     let committeeName: string = undefined;
-//     const RETENTION_PERIOD = 5; // Retention is 5 years + last Term End Date.
-//     let memberHistory = await sp.web.lists.getByTitle(MyLists.CommitteeMemberHistory).items
-//         .filter(`SPFX_CommitteeMemberDisplayNameId eq ${memberId}`)
-//         .orderBy('TermEndDate', false).get();
+export const CalculateMemberInfoRetention = async (memberId: number): Promise<{ date: Date, committee: string }> => {
+    const sp = getSP();
+    let output: Date = undefined;
+    let committeeName: string = undefined;
+    const RETENTION_PERIOD = 5; // Retention is 5 years + last Term End Date.
 
-//     if (memberHistory && memberHistory.length > 0) {
-//         let tmpDate = new Date(memberHistory[0].TermEndDate);
-//         output = new Date(tmpDate.getFullYear() + RETENTION_PERIOD, tmpDate.getMonth(), tmpDate.getDate());
-//         committeeName = memberHistory[0].CommitteeName;
-//     }
+    const memberHistory = await sp.web.lists.getByTitle(MyLists.CommitteeMemberHistory).items
+        .filter(`SPFX_CommitteeMemberDisplayNameId eq ${memberId}`)
+        .orderBy('OData__EndDate', false)();
 
-//     return { date: output, committee: committeeName };
-// };
+    if (memberHistory && memberHistory.length > 0) {
+        const tmpDate = new Date(memberHistory[0].OData__EndDate);
+        output = new Date(tmpDate.getFullYear() + RETENTION_PERIOD, tmpDate.getMonth(), tmpDate.getDate());
+        committeeName = memberHistory[0].CommitteeName;
+    }
+
+    return { date: output, committee: committeeName };
+};
+
 
 // export const CalculateTotalYearsServed = (committeeTerms: ICommitteeMemberHistoryListItem[]): number => {
 //     /**
@@ -212,6 +217,26 @@ export const GetMember = async (id: number): Promise<any> => await getSP().web.l
 
 
 //#region Create
+/**
+ * Create a new list item in the Committee Member History list.
+ */
+export const CreateCommitteeMemberHistoryItem = async (committeeMemberHistoryItem: INewCommitteeMemberHistoryListItem): Promise<void> => {
+    const sp = getSP();
+
+    debugger;
+    await sp.web.lists.getByTitle(MyLists.CommitteeMemberHistory).items.add({ ...committeeMemberHistoryItem });
+    debugger;
+
+    // ? Why did I have this? 
+    //const committeeMemberContactInfoRetention = await CalculateMemberInfoRetention(committeeMemberHistoryItem.SPFX_CommitteeMemberDisplayNameId);
+
+    // ? What does this do?
+    // await sp.web.lists.getByTitle(MyLists.Members).items.getById(committeeMemberHistoryItem.SPFX_CommitteeMemberDisplayNameId).update({
+    //     RetentionDate: committeeMemberContactInfoRetention.date,
+    //     RetentionDateCommittee: committeeMemberContactInfoRetention.committee
+    // });
+};
+
 export const CreateNewMember = async (member: IMemberListItem): Promise<IItemAddResult> => {
     const sp = getSP();
 
@@ -271,8 +296,8 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
     await sp.web.lists.getByTitle(committee.CommitteeName).items.getById(docSet.ID).update({
         Position: committee.Position,
         OData__Status: committee._Status,
-        _EndDate: committee._EndDate,
-        TermStartDate0: committee.StartDate,
+        OData__EndDate: committee._EndDate,
+        StartDate: committee.StartDate,
         //     //SPFX_CommitteeMemberDisplayNameId: memberId
     });
 
@@ -290,18 +315,18 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
 
     // Step 4: Update Committee Member List Item to include this new committee.
     // TODO: How do I manage this relationship? 
-
+    debugger;
     // Step 5: Create a committee member history list item record.
-    // CreateCommitteeMemberHistoryItem({
-    //     CommitteeName: committee.CommitteeName,
-    //     OData__EndDate: committee._EndDate,
-    //     StartDate: committee.StartDate,
-    //     FirstName: member.FirstName,
-    //     LastName: member.LastName,
-    //     SPFX_CommitteeMemberDisplayNameId: memberId,
-    //     MemberID: memberId,
-    //     Title: `${member.FirstName} ${member.LastName}`
-    // });
+    await CreateCommitteeMemberHistoryItem({
+        CommitteeName: committee.CommitteeName,
+        Title: FormatMemberTitle(member.FirstName, member.LastName),
+        OData__EndDate: committee._EndDate,
+        StartDate: committee.StartDate,
+        FirstName: member.FirstName,
+        LastName: member.LastName,
+        MemberID: memberId
+    });
+    debugger;
 };
 //#endregion
 
