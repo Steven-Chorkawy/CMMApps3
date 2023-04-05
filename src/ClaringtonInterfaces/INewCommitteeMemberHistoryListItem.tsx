@@ -7,3 +7,12 @@ export default interface INewCommitteeMemberHistoryListItem {
     LastName: string;
     MemberID: number;
 }
+
+/**
+ * Committee Member History list item record.
+ */
+export interface ICommitteeMemberHistoryListItem extends INewCommitteeMemberHistoryListItem {
+    ID: number;
+    Id: number;
+    DisplayName: string;
+}

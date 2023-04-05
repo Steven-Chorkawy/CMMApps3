@@ -16,7 +16,7 @@ import { MyLists } from "./MyLists";
 import { IItemAddResult, IItemUpdateResult } from "@pnp/sp/items";
 import IMemberListItem from "../ClaringtonInterfaces/IMemberListItem";
 import { IFolderAddResult } from "@pnp/sp/folders";
-import INewCommitteeMemberHistoryListItem from "../ClaringtonInterfaces/INewCommitteeMemberHistoryListItem";
+import INewCommitteeMemberHistoryListItem, { ICommitteeMemberHistoryListItem } from "../ClaringtonInterfaces/INewCommitteeMemberHistoryListItem";
 
 
 let _sp: SPFI = null;
@@ -111,50 +111,50 @@ export const CalculateMemberInfoRetention = async (memberId: number): Promise<{ 
 };
 
 
-// export const CalculateTotalYearsServed = (committeeTerms: ICommitteeMemberHistoryListItem[]): number => {
-//     /**
-//      * Steps to confirm Total Years Served.
-//      * 1.   Start date must be less than today.  If is not ignore this term as it is invalid.
-//      * 2.   End date must be greater than or equal to day.  If it is not use today's date.
-//      * 3.   
-//      */
-//     debugger;
-//     let totalYears: number = 0;
-//     let termTotal: number = 0;
+export const CalculateTotalYearsServed = (committeeTerms: ICommitteeMemberHistoryListItem[]): number => {
+    /**
+     * Steps to confirm Total Years Served.
+     * 1.   Start date must be less than today.  If is not ignore this term as it is invalid.
+     * 2.   End date must be greater than or equal to day.  If it is not use today's date.
+     * 3.   
+     */
+    debugger;
+    let totalYears: number = 0;
+    let termTotal: number = 0;
 
-//     for (let termIndex = 0; termIndex < committeeTerms.length; termIndex++) {
-//         // reset this counter. 
-//         termTotal = 0;
+    for (let termIndex = 0; termIndex < committeeTerms.length; termIndex++) {
+        // reset this counter. 
+        termTotal = 0;
 
-//         const term = committeeTerms[termIndex];
-//         let startDate = new Date(term.StartDate),
-//             endDate = new Date(term.TermEndDate),
-//             today = new Date();
+        const term = committeeTerms[termIndex];
+        let startDate = new Date(term.StartDate),
+            endDate = new Date(term.OData__EndDate),
+            today = new Date();
 
-//         console.log(term);
-//         if (startDate > today) {
-//             debugger;
-//             console.log('Something went wrong!');
-//             continue; // Continue onto the next iteration. 
-//         }
+        console.log(term);
+        if (startDate > today) {
+            debugger;
+            console.log('Something went wrong!');
+            continue; // Continue onto the next iteration. 
+        }
 
-//         // End date is currently in the future so we will use today's date to calculate the total terms served. 
-//         if (endDate >= today) {
-//             endDate = today;
-//         }
+        // End date is currently in the future so we will use today's date to calculate the total terms served. 
+        if (endDate >= today) {
+            endDate = today;
+        }
 
-//         termTotal = endDate.getFullYear() - startDate.getFullYear();
+        termTotal = endDate.getFullYear() - startDate.getFullYear();
 
-//         // Add to the running total.
-//         totalYears += termTotal;
-//     }
+        // Add to the running total.
+        totalYears += termTotal;
+    }
 
-//     return totalYears;
-// };
+    return totalYears;
+};
 //#endregion
 
 
-//#region Read
+//#region Reads
 export const GetChoiceColumn = async (listTitle: string, columnName: string): Promise<string[]> => {
     const sp = getSP();
     try {
@@ -203,7 +203,7 @@ export const GetLibraryContentTypes = async (libraryTitle: string): Promise<stri
 
 };
 
-// export const GetMembers = async (): Promise<IMemberListItem[]> => await sp.web.lists.getByTitle(MyLists.Members).items.getAll();
+export const GetMembers = async (): Promise<IMemberListItem[]> => await getSP().web.lists.getByTitle(MyLists.Members).items();
 
 export const GetMember = async (id: number): Promise<any> => await getSP().web.lists.getByTitle(MyLists.Members).items.getById(id);
 
@@ -212,7 +212,7 @@ export const GetMember = async (id: number): Promise<any> => await getSP().web.l
  * @param id MemberID field from the Committee Member History list.
  * @returns ICommitteeMemberHistoryListItem[]
  */
-// export const GetMembersTermHistory = async (id: number): Promise<ICommitteeMemberHistoryListItem[]> => await sp.web.lists.getByTitle(MyLists.CommitteeMemberHistory).items.filter(`MemberID eq ${id}`).get();
+export const GetMembersTermHistory = async (id: number): Promise<ICommitteeMemberHistoryListItem[]> => await getSP().web.lists.getByTitle(MyLists.CommitteeMemberHistory).items.filter(`MemberID eq ${id}`)();
 //#endregion
 
 
