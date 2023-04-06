@@ -16,7 +16,7 @@ import { MyLists } from "./MyLists";
 import { IItemAddResult, IItemUpdateResult } from "@pnp/sp/items";
 import IMemberListItem from "../ClaringtonInterfaces/IMemberListItem";
 import { IFolderAddResult } from "@pnp/sp/folders";
-import INewCommitteeMemberHistoryListItem, { ICommitteeMemberHistoryListItem } from "../ClaringtonInterfaces/INewCommitteeMemberHistoryListItem";
+import { INewCommitteeMemberHistoryListItem, ICommitteeMemberHistoryListItem } from "../ClaringtonInterfaces/INewCommitteeMemberHistoryListItem";
 
 
 let _sp: SPFI = null;
