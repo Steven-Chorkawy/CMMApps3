@@ -4,7 +4,7 @@ import { Field, FieldArray, Form, FormElement, FormRenderProps } from '@progress
 import { DefaultButton, getTheme, Link, MessageBar, MessageBarType, PrimaryButton, ProgressIndicator, Separator, TextField } from '@fluentui/react';
 import { emailValidator } from '../../../HelperMethods/Validators';
 import { CreateNewCommitteeMember, CreateNewMember, FormatDocumentSetPath, GetListOfActiveCommittees } from '../../../HelperMethods/MyHelperMethods';
-import { PhoneInput, PostalCodeInput } from '../../../ClaringtonComponents/MyFormComponents';
+import { EmailInput, PhoneInput, PostalCodeInput } from '../../../ClaringtonComponents/MyFormComponents';
 import { NewCommitteeMemberFormComponent } from '../../../ClaringtonComponents/NewCommitteeMemberFormComponent';
 
 export enum NewMemberFormSaveStatus {
@@ -90,11 +90,6 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
 
     const reactTheme = getTheme();
 
-    const EmailInput = (fieldRenderProps: any): any => {
-      const { validationMessage, visited, ...others } = fieldRenderProps;
-      return <TextField {...others} errorMessage={visited && validationMessage && validationMessage} />;
-    };
-
     return (
       <div>
         <Form
@@ -117,7 +112,7 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
                 <Field name={'Member.WorkCity'} label={'City'} component={TextField} />
                 <Field name={'Member.PostalCode'} label={'Postal Code'} component={PostalCodeInput} onChange={e => formRenderProps.onChange(e.name, e.value)} />
               </div>
-              <h2>Add '{formRenderProps.valueGetter('Member.FirstName')} {formRenderProps.valueGetter('Member.LastName')}' to Committee</h2>
+              <h2>Add &apos{formRenderProps.valueGetter('Member.FirstName')} {formRenderProps.valueGetter('Member.LastName')}&apos to Committee</h2>
               {
                 this.state.activeCommittees.length > 0 &&
                 <FieldArray

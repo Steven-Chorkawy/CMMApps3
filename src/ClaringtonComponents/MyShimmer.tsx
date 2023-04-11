@@ -3,7 +3,7 @@ import * as React from 'react';
 
 
 export class MyShimmer extends React.Component {
-    public render() {
+    public render(): React.ReactElement<any> {
         const style = { margin: '10px' };
         return <div>
             <Shimmer style={style} />

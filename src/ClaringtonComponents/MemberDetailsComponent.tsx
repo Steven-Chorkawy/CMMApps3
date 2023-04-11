@@ -1,7 +1,6 @@
-import { Panel, PanelType, Pivot, Dropdown, Separator, PivotItem, Label, Text, ITextProps, Stack, ActionButton, DefaultButton, Breadcrumb, IBreadcrumbItem, Shimmer, IFontStyles, Link, Icon, mergeStyleSets, ActivityItem } from '@fluentui/react';
+import { Text, Stack, Breadcrumb, IBreadcrumbItem } from '@fluentui/react';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import IMemberListItem from '../ClaringtonInterfaces/IMemberListItem';
 import { ICommitteeMemberHistoryListItem } from '../ClaringtonInterfaces/INewCommitteeMemberHistoryListItem';
 import { CalculateTotalYearsServed, GetMembersTermHistory } from '../HelperMethods/MyHelperMethods';
@@ -61,45 +60,6 @@ export class CommitteeMemberBreadCrumb extends React.Component<ICommitteeMemberB
             { text: `${this.props.committeeTerm.Title}`, key: 'Member', href: `${LIBRARY_URL}${ID_FILTER}`, isCurrentItem: true },
         ];
 
-        const classNames = mergeStyleSets({
-            exampleRoot: {
-                marginTop: '20px',
-            },
-            nameText: {
-                fontWeight: 'bold',
-            },
-        });
-        const activityItem = {
-            key: 1,
-            activityDescription: [
-                <Link
-                    key={1}
-                    className={classNames.nameText}
-                    onClick={() => {
-                        alert('View More Terms...');
-                    }}
-                >
-                    View More Terms...
-                </Link>,
-                <span key={2}> commented</span>,
-            ],
-            activityIcon: <Icon iconName={'Add'} />,
-            comments: [
-                <span key={1}>Hello! I am making a comment and mentioning </span>,
-                <Link
-                    key={2}
-                    className={classNames.nameText}
-                    onClick={() => {
-                        alert('An @mentioned name was clicked.');
-                    }}
-                >
-                    @Anđela Debeljak
-                </Link>,
-                <span key={3}> in the text of the comment.</span>,
-            ],
-            timeStamp: 'Just now',
-        };
-
         return <div>
             <Breadcrumb
                 items={itemsWithHref}
@@ -127,17 +87,24 @@ export class CommitteeMemberTermHistory extends React.Component<ICommitteeMember
             termHistories: undefined
         };
 
-        GetMembersTermHistory(this.props.memberID).then(values => {
-            this.setState({
-                allTermHistories: values,
-                termHistories: values.filter((value, index, self) => index === self.sort((a, b) => {
-                    // Turn your strings into dates, and then subtract them
-                    // to get a value that is either negative, positive, or zero.
-                    let bb: any = new Date(b.StartDate), aa: any = new Date(b.StartDate);
-                    return bb - aa;
-                }).findIndex((t) => (t.CommitteeName === value.CommitteeName)))
+        GetMembersTermHistory(this.props.memberID)
+            .then(values => {
+                this.setState({
+                    allTermHistories: values,
+                    termHistories: values.filter((value, index, self) => index === self.sort((a, b) => {
+                        // Turn your strings into dates, and then subtract them
+                        // to get a value that is either negative, positive, or zero.
+                        // ! This does not look right.  'b' is used twice and 'a' is never used.
+                        const bb: any = new Date(b.StartDate),
+                            aa: any = new Date(b.StartDate);
+                        return bb - aa;
+                    }).findIndex((t) => (t.CommitteeName === value.CommitteeName)))
+                });
+            })
+            .catch(reason => {
+                console.error('Failed ot get members term history!');
+                console.error(reason);
             });
-        });
     }
 
     public render(): React.ReactElement<any> {
@@ -154,8 +121,8 @@ export class CommitteeMemberTermHistory extends React.Component<ICommitteeMember
                         </div>
                     </div>
                 }
-                {this.state.termHistories.map(term => {
-                    return <div>
+                {this.state.termHistories.map((term: any, index: number) => {
+                    return <div key={`termHistory-${index}`}>
                         <CommitteeMemberBreadCrumb
                             committeeTerm={term}
                             allTerms={this.state.allTermHistories}
@@ -175,7 +142,7 @@ export class CommitteeMemberContactDetails extends React.Component<ICommitteeMem
         super(props);
     }
 
-    private _detailDisplay = (prop: string, label: string) => {
+    private _detailDisplay = (prop: string, label: string): React.ReactElement<any> => {
         return <div>Details go here...</div>
         //return <div> <span>{label}: {this.props.member[prop] && this.props.member[prop]}</span></div>;
     }

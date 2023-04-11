@@ -126,24 +126,24 @@ export const CalculateTotalYearsServed = (committeeTerms: ICommitteeMemberHistor
         // reset this counter. 
         termTotal = 0;
 
-        const term = committeeTerms[termIndex];
-        let startDate = new Date(term.StartDate),
-            endDate = new Date(term.OData__EndDate),
-            today = new Date();
+        const TERM = committeeTerms[termIndex];
+        const START_DATE = new Date(TERM.StartDate);
+        const TODAY = new Date();
+        let endDate = new Date(TERM.OData__EndDate);
 
-        console.log(term);
-        if (startDate > today) {
+        console.log(TERM);
+        if (START_DATE > TODAY) {
             debugger;
             console.log('Something went wrong!');
             continue; // Continue onto the next iteration. 
         }
 
         // End date is currently in the future so we will use today's date to calculate the total terms served. 
-        if (endDate >= today) {
-            endDate = today;
+        if (endDate >= TODAY) {
+            endDate = TODAY;
         }
 
-        termTotal = endDate.getFullYear() - startDate.getFullYear();
+        termTotal = endDate.getFullYear() - START_DATE.getFullYear();
 
         // Add to the running total.
         totalYears += termTotal;

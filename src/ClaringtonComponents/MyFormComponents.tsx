@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MaskedTextField, ComboBox, DatePicker } from '@fluentui/react';
+import { MaskedTextField, ComboBox, DatePicker, TextField } from '@fluentui/react';
 
 export const MyComboBox = (fieldRenderProps: any): any => {
     const {
@@ -66,5 +66,10 @@ export const MyMaskedInput = (fieldRenderProps: any): any => {
 };
 
 export const PhoneInput = (fieldRenderProps: any): any => <MyMaskedInput {...fieldRenderProps} mask="(999) 999-9999" />;
+
+export const EmailInput = (fieldRenderProps: any): any => {
+    const { validationMessage, visited, ...others } = fieldRenderProps;
+    return <TextField {...others} errorMessage={visited && validationMessage && validationMessage} />;
+};
 
 export const PostalCodeInput = (fieldRenderProps: any): any => <MyMaskedInput {...fieldRenderProps} mask="a9a 9a9" />;

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { escape } from '@microsoft/sp-lodash-subset';
-import { ComboBox, Icon, Text } from '@fluentui/react';
+import { ComboBox, Icon } from '@fluentui/react';
 import { WidgetSize, Dashboard } from '@pnp/spfx-controls-react/lib/Dashboard';
 import IMemberListItem from '../ClaringtonInterfaces/IMemberListItem';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
@@ -31,11 +30,19 @@ export class CommitteeMemberDashboard extends React.Component<ICommitteeMemberDa
             this.setState({
                 members: members
             });
+        }).catch(reason => {
+            console.error('Failed to get members');
+            console.error(reason);
+            this.setState({ members: undefined });
         });
 
         if (this.props.memberId) {
             GetMember(this.props.memberId).then(value => {
                 this.setState({ selectedMember: value });
+            }).catch(reason => {
+                console.error('Failed to get selected member');
+                console.error(reason);
+                this.setState({ selectedMember: undefined });
             });
         }
     }
@@ -61,9 +68,13 @@ export class CommitteeMemberDashboard extends React.Component<ICommitteeMemberDa
                     })}
                     onChange={(event, option) => {
                         this.setState({ selectedMember: undefined });
-                        GetMember(Number(option.key)).then(member => {
-                            this.setState({ selectedMember: member });
-                        });
+                        GetMember(Number(option.key))
+                            .then(member => {
+                                this.setState({ selectedMember: member });
+                            }).catch(reason => {
+                                console.error('Failed to get member!');
+                                console.error(reason);
+                            });
                     }}
                     defaultSelectedKey={this.props.memberId ? this.props.memberId : undefined}
                 />

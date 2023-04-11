@@ -6,8 +6,6 @@ import {
   PropertyPaneTextField
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
-import { IReadonlyTheme } from '@microsoft/sp-component-base';
-
 import * as strings from 'CommitteeMemberDashboardWebPartStrings';
 import { CommitteeMemberDashboard, ICommitteeMemberDashboardProps } from '../../ClaringtonComponents/CommitteeMemberDashboard';
 import { getSP } from '../../HelperMethods/MyHelperMethods';
@@ -17,8 +15,6 @@ export interface ICommitteeMemberDashboardWebPartProps {
 }
 
 export default class CommitteeMemberDashboardWebPart extends BaseClientSideWebPart<ICommitteeMemberDashboardWebPartProps> {
-
-
   public render(): void {
     const element: React.ReactElement<ICommitteeMemberDashboardProps> = React.createElement(
       CommitteeMemberDashboard,
