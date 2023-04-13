@@ -48,7 +48,9 @@ export class CommitteeMemberDashboard extends React.Component<ICommitteeMemberDa
     }
 
     public render(): React.ReactElement<ICommitteeMemberDashboardProps> {
-        const linkExample = { href: "#" };
+        const LINK_MEMBER_EDIT_FORM = { href: `/sites/CMM/Lists/Members/EditForm.aspx?ID=${this.props.memberId}` };
+        const LINK_MEMBER_HISTORY = { href: `/sites/CMM/Lists/CommitteeMemberHistory?FilterField1=MemberID&FilterValue1=${this.props.memberId}` };
+        const LINK_EXAMPLE = { href: `#` };
         const calloutItemsExample = [
             {
                 id: "action_1",
@@ -96,7 +98,7 @@ export class CommitteeMemberDashboard extends React.Component<ICommitteeMemberDa
                                 ),
                             }
                         ],
-                        link: linkExample,
+                        link: LINK_MEMBER_EDIT_FORM,
                     },
                     {
                         title: "Committee History",
@@ -106,12 +108,12 @@ export class CommitteeMemberDashboard extends React.Component<ICommitteeMemberDa
                             title: 'Committee History',
                             content: (<CommitteeMemberTermHistory memberID={this.state.selectedMember.ID} context={this.props.context} />)
                         }],
-                        link: linkExample,
+                        link: LINK_MEMBER_HISTORY,
                     },
                     {
                         title: "Card 3",
                         size: WidgetSize.Double,
-                        link: linkExample,
+                        link: LINK_EXAMPLE,
                     }]} />
             }
         </div>;
