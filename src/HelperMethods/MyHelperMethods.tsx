@@ -118,7 +118,6 @@ export const CalculateTotalYearsServed = (committeeTerms: ICommitteeMemberHistor
      * 2.   End date must be greater than or equal to day.  If it is not use today's date.
      * 3.   
      */
-    debugger;
     let totalYears: number = 0;
     let termTotal: number = 0;
 
