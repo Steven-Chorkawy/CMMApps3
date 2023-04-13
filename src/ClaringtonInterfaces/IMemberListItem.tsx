@@ -22,4 +22,6 @@ export default interface IMemberListItem {
     Province?: string;      // This is a Choice column in SharePoint.
     RetentionDate?: string;
     RetentionDateCommittee?: string;
+
+    Modified?: Date;
 }

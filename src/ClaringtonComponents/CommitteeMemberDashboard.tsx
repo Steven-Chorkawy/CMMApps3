@@ -3,7 +3,7 @@ import { ComboBox, Icon } from '@fluentui/react';
 import { WidgetSize, Dashboard } from '@pnp/spfx-controls-react/lib/Dashboard';
 import IMemberListItem from '../ClaringtonInterfaces/IMemberListItem';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
-import { GetMember, GetMembers } from '../HelperMethods/MyHelperMethods';
+import { GetMember, GetMembers, OnFormatDate } from '../HelperMethods/MyHelperMethods';
 import { CommitteeMemberContactDetails, CommitteeMemberTermHistory } from './MemberDetailsComponent';
 
 
@@ -84,7 +84,7 @@ export class CommitteeMemberDashboard extends React.Component<ICommitteeMemberDa
                 <Dashboard
                     widgets={[{
                         title: this.state.selectedMember.Title,
-                        desc: "Last updated Monday, April 4 at 11:15 AM (PT)",
+                        desc: `Last updated ${OnFormatDate(new Date(this.state.selectedMember.Modified))}`,
                         widgetActionGroup: calloutItemsExample,
                         size: WidgetSize.Triple,
                         body: [
