@@ -106,7 +106,6 @@ export class CommitteeMemberTermHistory extends React.Component<ICommitteeMember
                     termHistories: values.filter((value, index, self) => index === self.sort((a, b) => {
                         // Turn your strings into dates, and then subtract them
                         // to get a value that is either negative, positive, or zero.
-                        // ! This does not look right.  'b' is used twice and 'a' is never used.
                         const bb: any = new Date(b.StartDate),
                             aa: any = new Date(b.StartDate);
                         return bb - aa;
