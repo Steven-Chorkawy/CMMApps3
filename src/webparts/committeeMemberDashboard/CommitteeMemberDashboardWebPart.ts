@@ -19,7 +19,7 @@ export default class CommitteeMemberDashboardWebPart extends BaseClientSideWebPa
     const element: React.ReactElement<ICommitteeMemberDashboardProps> = React.createElement(
       CommitteeMemberDashboard,
       {
-        memberId: 1,
+        memberId: 12, // TODO: Remove this hard coded value.
         context: this.context
       }
     );
