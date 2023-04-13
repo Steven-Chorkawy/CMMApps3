@@ -49,7 +49,7 @@ export class CommitteeMemberDashboard extends React.Component<ICommitteeMemberDa
 
     public render(): React.ReactElement<ICommitteeMemberDashboardProps> {
         const LINK_MEMBER_EDIT_FORM = { href: `/sites/CMM/Lists/Members/EditForm.aspx?ID=${this.props.memberId}` };
-        const LINK_MEMBER_HISTORY = { href: `/sites/CMM/Lists/CommitteeMemberHistory?FilterField1=MemberID&FilterValue1=${this.props.memberId}` };
+        const LINK_MEMBER_HISTORY = { href: `/sites/CMM/Lists/CommitteeMemberHistory?FilterField1=MemberID&FilterValue1=${this.props.memberId}&sortField=_EndDate&isAscending=false` };
         const LINK_EXAMPLE = { href: `#` };
         const calloutItemsExample = [
             {
