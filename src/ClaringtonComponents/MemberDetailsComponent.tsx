@@ -46,7 +46,7 @@ export class CommitteeMemberBreadCrumb extends React.Component<ICommitteeMemberB
     }
 
     public render(): React.ReactElement<any> {
-        const ID_FILTER = `?=FilterValue72&FilterField1=Member_x0020_Display_x0020_Name_x003a_ID&FilterValue1=${this.props.committeeTerm.MemberID}`;
+        //const ID_FILTER = `?=FilterValue72&FilterField1=Member_x0020_Display_x0020_Name_x003a_ID&FilterValue1=${this.props.committeeTerm.MemberID}`;
         const LIBRARY_URL = `${this.props.context.pageContext.web.absoluteUrl}/${this.props.committeeTerm.CommitteeName}`;
 
 
