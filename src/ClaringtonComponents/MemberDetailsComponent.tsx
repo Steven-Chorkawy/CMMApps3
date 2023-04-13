@@ -143,8 +143,7 @@ export class CommitteeMemberContactDetails extends React.Component<ICommitteeMem
     }
 
     private _detailDisplay = (prop: string, label: string): React.ReactElement<any> => {
-        return <div>Details go here...</div>
-        //return <div> <span>{label}: {this.props.member[prop] && this.props.member[prop]}</span></div>;
+        return <div><span>{label}: {this.props.member[prop as keyof IMemberListItem] && this.props.member[prop as keyof IMemberListItem]}</span></div>;
     }
 
     public render(): React.ReactElement<any> {
