@@ -54,10 +54,22 @@ export class CommitteeMemberBreadCrumb extends React.Component<ICommitteeMemberB
             // Normally each breadcrumb would have a unique href, but to make the navigation less disruptive
             // in the example, it uses the breadcrumb page as the href for all the items
             {
-                text: this.props.committeeTerm.CommitteeName, key: 'CommitteeLibrary', href: `${LIBRARY_URL}`,
+                text: this.props.committeeTerm.CommitteeName,
+                key: 'CommitteeLibrary',
+                href: `${LIBRARY_URL}`,
+                target: '_blank',
+                title: `View all ${this.props.committeeTerm.CommitteeName} committee members`
                 // onRender: e => { console.log('IBreadcrumbItem'); console.log(e); return <div>hello world!<div>{ }</div></div>; }
             },
-            { text: `${this.props.committeeTerm.Title}`, key: 'Member', href: `${LIBRARY_URL}${ID_FILTER}`, isCurrentItem: true },
+            {
+                text: `${this.props.committeeTerm.Title}`,
+                // key: 'Member', href: `${LIBRARY_URL}${ID_FILTER}`, isCurrentItem: true
+                key: 'Member',
+                href: `${LIBRARY_URL}/${this.props.committeeTerm.Title}`,
+                isCurrentItem: true,
+                target: '_blank',
+                title: `View ${this.props.committeeTerm.Title} documents for ${this.props.committeeTerm.CommitteeName}`
+            },
         ];
 
         return <div>
@@ -151,15 +163,15 @@ export class CommitteeMemberContactDetails extends React.Component<ICommitteeMem
             <Stack horizontal={true} wrap={true}>
                 <Stack.Item grow={6}>
                     {this._detailDisplay('EMail', 'Email')}
-                    {this._detailDisplay('EMail2', 'Email')}
+                    {this._detailDisplay('Email2', 'Email')}
                     {this._detailDisplay('CellPhone1', 'Cell Phone')}
                     {this._detailDisplay('HomePhone', 'Home Phone')}
                     {this._detailDisplay('WorkPhone', 'Work Phone')}
                 </Stack.Item>
                 <Stack.Item grow={6}>
-                    {this._detailDisplay('Address', 'Address')}
+                    {this._detailDisplay('WorkAddress', 'Address')}
                     {this._detailDisplay('PostalCode', 'Postal Code')}
-                    {this._detailDisplay('City', 'City')}
+                    {this._detailDisplay('WorkCity', 'City')}
                 </Stack.Item>
             </Stack>
         </div>;
