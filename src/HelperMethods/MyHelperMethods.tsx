@@ -205,7 +205,7 @@ export const GetLibraryContentTypes = async (libraryTitle: string): Promise<stri
 
 export const GetMembers = async (): Promise<IMemberListItem[]> => await getSP().web.lists.getByTitle(MyLists.Members).items();
 
-export const GetMember = async (id: number): Promise<any> => await getSP().web.lists.getByTitle(MyLists.Members).items.getById(id);
+export const GetMember = async (id: number): Promise<any> => await getSP().web.lists.getByTitle(MyLists.Members).items.getById(id)();
 
 /**
  * Get a members term history.
