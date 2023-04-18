@@ -108,6 +108,7 @@ export class CommitteeMemberTermHistory extends React.Component<ICommitteeMember
                         // to get a value that is either negative, positive, or zero.
                         const bb: any = new Date(b.StartDate),
                             aa: any = new Date(b.StartDate);
+                        // This sorts the term histories.
                         return bb - aa;
                     }).findIndex((t) => (t.CommitteeName === value.CommitteeName)))
                 });
