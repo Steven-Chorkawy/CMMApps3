@@ -321,8 +321,9 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
         Title: FormatMemberTitle(member.FirstName, member.LastName),
         OData__EndDate: committee._EndDate,
         StartDate: committee.StartDate,
-        FirstName: member.FirstName,
-        LastName: member.LastName,
+        // FirstName: member.FirstName,
+        // LastName: member.LastName,
+        MemberLookupId: memberId,
         MemberID: memberId
     });
     debugger;
