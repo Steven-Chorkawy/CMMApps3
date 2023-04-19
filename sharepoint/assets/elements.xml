@@ -4,8 +4,16 @@
         Title="CommitteeMemberDetails"
         RegistrationId="100"
         RegistrationType="List"
-        Location="ClientSideExtension.ListViewCommandSet.CommandBar"
-        ClientSideComponentId="8ab5e7d2-4135-40a5-915b-2639810220aa"
+        Location="ClientSideExtension.ListViewCommandSet"
+        ClientSideComponentId="8ab5e7d2-4135-40a5-915b-2639810220aa" 
+        ClientSideComponentProperties="{&quot;sampleTextOne&quot;:&quot;One item is selected in the list.&quot;, &quot;sampleTextTwo&quot;:&quot;This command is always visible.&quot;}">
+    </CustomAction>
+    <CustomAction
+        Title="CommitteeMemberDetails"
+        RegistrationId="101"
+        RegistrationType="List"
+        Location="ClientSideExtension.ListViewCommandSet"
+        ClientSideComponentId="8ab5e7d2-4135-40a5-915b-2639810220aa" 
         ClientSideComponentProperties="{&quot;sampleTextOne&quot;:&quot;One item is selected in the list.&quot;, &quot;sampleTextTwo&quot;:&quot;This command is always visible.&quot;}">
     </CustomAction>
 </Elements>

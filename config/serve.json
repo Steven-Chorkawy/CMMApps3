@@ -4,6 +4,7 @@
   "https": true,
   "initialPage": "https://claringtonnet.sharepoint.com/sites/cmm/_layouts/workbench.aspx",
   "serveConfigurations": {
+    // Run 'gulp serve' to use this config.
     "default": {
       // ! This is the URL that will be launch on 'gulp serve'
       "pageUrl": "https://claringtonnet.sharepoint.com/sites/CMM/Lists/CommitteeMemberHistory",
@@ -17,7 +18,7 @@
         }
       }
     },
-    // run 'gulp serve --config=committeeMemberDetails' to use this config.
+    // Run 'gulp serve --config=committeeMemberDetails' to use this config.
     "committeeMemberDetails": {
       "pageUrl": "https://claringtonnet.sharepoint.com/sites/CMM/Lists/CommitteeMemberHistory",
       "customActions": {
