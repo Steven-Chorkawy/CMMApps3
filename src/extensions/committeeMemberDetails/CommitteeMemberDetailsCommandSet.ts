@@ -3,10 +3,17 @@ import {
   BaseListViewCommandSet,
   Command,
   IListViewCommandSetExecuteEventParameters,
-  ListViewStateChangedEventArgs
+  ListViewStateChangedEventArgs,
+  RowAccessor
 } from '@microsoft/sp-listview-extensibility';
 import { Dialog } from '@microsoft/sp-dialog';
 import { MyCommandSets } from '../../HelperMethods/MyCommandSets';
+import { getSP } from '../../HelperMethods/MyHelperMethods';
+import { MyLists } from '../../HelperMethods/MyLists';
+import * as ReactDOM from 'react-dom';
+import * as React from 'react';
+import { CommitteeMemberDashboardPanel } from '../../ClaringtonComponents/CommitteeMemberDashboardPanel';
+
 
 /**
  * If your command set uses the ClientSideComponentProperties JSON input,
@@ -23,8 +30,16 @@ const LOG_SOURCE: string = 'CommitteeMemberDetailsCommandSet';
 
 export default class CommitteeMemberDetailsCommandSet extends BaseListViewCommandSet<ICommitteeMemberDetailsCommandSetProperties> {
 
+  private panelPlaceHolder: HTMLDivElement = null;
+
+
   public onInit(): Promise<void> {
     Log.info(LOG_SOURCE, 'Initialized CommitteeMemberDetailsCommandSet');
+
+    getSP(this.context);
+
+    this.panelPlaceHolder = document.body.appendChild(document.createElement("div"));
+
 
     // initial state of the command's visibility
     const compareOneCommand: Command = this.tryGetCommand('COMMAND_1');
@@ -51,9 +66,16 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
         });
         break;
       case MyCommandSets.MemberDetails:
-        Dialog.alert(`Member Details Test!`).catch(() => {
-          /* handle error */
-        });
+        console.log(event);
+        const selectedRow: RowAccessor = event.selectedRows[0];
+        debugger;
+        let selectedMemberLookup = selectedRow.getValueByName('MemberLookup');  // Most of the time we will want this field.
+        let selectedMemberId = selectedRow.getValueByName('ID');                // When a MemberLookup field is not present check for an ID field.
+        const memberId: number = selectedMemberLookup ? selectedMemberLookup[0].lookupId : Number(selectedMemberId)
+        debugger;        
+
+        const memberDetailPanel: CommitteeMemberDashboardPanel = new CommitteeMemberDashboardPanel({ context: this.context, memberId: memberId });
+        memberDetailPanel.show();
         break;
       default:
         throw new Error('Unknown command');
@@ -71,9 +93,11 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
     }
 
     if (compareMemberDetailsCommand) {
-      // TODO: Also check if the current library is the Members list. 
-      // TODO: Also check if the current row has a 'MemberLookup' column that is not null.
-      compareMemberDetailsCommand.visible = this.context.listView.selectedRows?.length === 1;
+      if (this.context.listView.list.title === MyLists.Members || this.context.listView.columns.some(e => e.field.internalName === 'MemberLookup')) {
+        // Only show when in the Members list, when the current list has a 'MemberLookup' field, and when one row is selected.
+        // No need to check if MemberLookup has a value here.  The display form will handle that with error messages.
+        compareMemberDetailsCommand.visible = this.context.listView.selectedRows?.length === 1;
+      }
     }
 
     // You should call this.raiseOnChage() to update the command bar

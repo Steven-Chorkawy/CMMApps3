@@ -37,6 +37,7 @@ export class CommitteeMemberDashboard extends React.Component<ICommitteeMemberDa
         });
 
         if (this.props.memberId) {
+            debugger;
             GetMember(this.props.memberId).then(value => {
                 this.setState({ selectedMember: value });
             }).catch(reason => {

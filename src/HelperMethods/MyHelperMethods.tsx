@@ -17,11 +17,12 @@ import { IItemAddResult, IItemUpdateResult } from "@pnp/sp/items";
 import IMemberListItem from "../ClaringtonInterfaces/IMemberListItem";
 import { IFolderAddResult } from "@pnp/sp/folders";
 import { INewCommitteeMemberHistoryListItem, ICommitteeMemberHistoryListItem } from "../ClaringtonInterfaces/INewCommitteeMemberHistoryListItem";
+import { ListViewCommandSetContext } from "@microsoft/sp-listview-extensibility";
 
 
 let _sp: SPFI = null;
 
-export const getSP = (context?: WebPartContext): SPFI => {
+export const getSP = (context?: WebPartContext | ListViewCommandSetContext): SPFI => {
     if (_sp === null && context !== null) {
         _sp = spfi().using(SPFx(context));
     }
