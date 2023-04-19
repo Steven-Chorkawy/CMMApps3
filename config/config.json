@@ -17,12 +17,21 @@
           "manifest": "./src/webparts/committeeMemberDashboard/CommitteeMemberDashboardWebPart.manifest.json"
         }
       ]
+    },
+    "committee-member-details-command-set": {
+      "components": [
+        {
+          "entrypoint": "./lib/extensions/committeeMemberDetails/CommitteeMemberDetailsCommandSet.js",
+          "manifest": "./src/extensions/committeeMemberDetails/CommitteeMemberDetailsCommandSet.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
   "localizedResources": {
     "NewCommitteeMemberWebPartStrings": "lib/webparts/newCommitteeMember/loc/{locale}.js",
     "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js",
-    "CommitteeMemberDashboardWebPartStrings": "lib/webparts/committeeMemberDashboard/loc/{locale}.js"
+    "CommitteeMemberDashboardWebPartStrings": "lib/webparts/committeeMemberDashboard/loc/{locale}.js",
+    "CommitteeMemberDetailsCommandSetStrings": "lib/extensions/committeeMemberDetails/loc/{locale}.js"
   }
 }

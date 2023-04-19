@@ -16,6 +16,7 @@
       "@microsoft/microsoft-graph-client": "3.0.2",
       "@microsoft/teams-js": "2.9.1"
     },
-    "componentType": "webpart"
+    "componentType": "extension",
+    "extensionType": "ListViewCommandSet"
   }
 }
