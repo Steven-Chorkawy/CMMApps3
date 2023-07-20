@@ -10,7 +10,7 @@
       "pageUrl": "https://claringtonnet.sharepoint.com/sites/CMM/Lists/CommitteeMemberHistory",
       "customActions": {
         "e0526677-c5a5-489a-b306-a04f306fb242": {
-          "location": "ClientSideExtension.ListViewCommandSet.CommandBar",
+          "location": "ClientSideExtension.ListViewCommandSet",
           "properties": {
             "sampleTextOne": "One item is selected in the list",
             "sampleTextTwo": "This command is always visible."
@@ -18,13 +18,12 @@
         }
       }
     },
-        // Run 'gulp serve --config=renewCommitteeMember' to use this config.
-
+    // Run 'gulp serve --config=renewCommitteeMember' to use this config.
     "renewCommitteeMember": {
       "pageUrl": "https://claringtonnet.sharepoint.com/sites/CMM/DemoCommittee",
       "customActions": {
         "e0526677-c5a5-489a-b306-a04f306fb242": {
-          "location": "ClientSideExtension.ListViewCommandSet.CommandBar",
+          "location": "ClientSideExtension.ListViewCommandSet",
           "properties": {
             "sampleTextOne": "One item is selected in the list",
             "sampleTextTwo": "This command is always visible."
