@@ -16,4 +16,20 @@
         ClientSideComponentId="8ab5e7d2-4135-40a5-915b-2639810220aa" 
         ClientSideComponentProperties="{&quot;sampleTextOne&quot;:&quot;One item is selected in the list.&quot;, &quot;sampleTextTwo&quot;:&quot;This command is always visible.&quot;}">
     </CustomAction>
+    <CustomAction
+        Title="RenewCommitteeMember"
+        RegistrationId="100"
+        RegistrationType="List"
+        Location="ClientSideExtension.ListViewCommandSet"
+        ClientSideComponentId="e0526677-c5a5-489a-b306-a04f306fb242" 
+        ClientSideComponentProperties="{&quot;sampleTextOne&quot;:&quot;One item is selected in the list.&quot;, &quot;sampleTextTwo&quot;:&quot;This command is always visible.&quot;}">
+    </CustomAction>
+    <CustomAction
+        Title="RenewCommitteeMember"
+        RegistrationId="101"
+        RegistrationType="List"
+        Location="ClientSideExtension.ListViewCommandSet"
+        ClientSideComponentId="e0526677-c5a5-489a-b306-a04f306fb242" 
+        ClientSideComponentProperties="{&quot;sampleTextOne&quot;:&quot;One item is selected in the list.&quot;, &quot;sampleTextTwo&quot;:&quot;This command is always visible.&quot;}">
+    </CustomAction>
 </Elements>
