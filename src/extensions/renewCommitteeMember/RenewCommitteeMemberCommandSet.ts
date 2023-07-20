@@ -7,6 +7,10 @@ import {
 } from '@microsoft/sp-listview-extensibility';
 import { Dialog } from '@microsoft/sp-dialog';
 import { MyCommandSets } from '../../HelperMethods/MyCommandSets';
+import { GetMemberIdFromSelectedRow } from '../../HelperMethods/MyHelperMethods';
+import * as React from 'react';
+import { RenewCommitteeMemberPanel } from '../../ClaringtonComponents/RenewCommitteeMember';
+import * as ReactDOM from 'react-dom';
 
 /**
  * If your command set uses the ClientSideComponentProperties JSON input,
@@ -40,9 +44,13 @@ export default class RenewCommitteeMemberCommandSet extends BaseListViewCommandS
     console.log(event);
     switch (event.itemId) {
       case MyCommandSets.RenewCommitteeMember:
-        Dialog.alert(`Renew Committee Member Clicked!`).catch(() => {
-          /* handle error */
-        });
+        debugger;
+        const memberId = GetMemberIdFromSelectedRow(event.selectedRows[0]);
+  
+        const renewMemberPanel: React.ReactComponentElement<any> = React.createElement(RenewCommitteeMemberPanel, { context: this.context, memberId: memberId });
+        const panelDiv = document.createElement('div');
+
+        ReactDOM.render(renewMemberPanel, panelDiv);
         break;
       // case 'COMMAND_2':
       //   Dialog.alert(`${this.properties.sampleTextTwo}`).catch(() => {

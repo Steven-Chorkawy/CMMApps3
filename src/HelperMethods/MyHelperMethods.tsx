@@ -17,7 +17,7 @@ import { IItemAddResult, IItemUpdateResult } from "@pnp/sp/items";
 import IMemberListItem from "../ClaringtonInterfaces/IMemberListItem";
 import { IFolderAddResult } from "@pnp/sp/folders";
 import { INewCommitteeMemberHistoryListItem, ICommitteeMemberHistoryListItem } from "../ClaringtonInterfaces/INewCommitteeMemberHistoryListItem";
-import { ListViewCommandSetContext } from "@microsoft/sp-listview-extensibility";
+import { ListViewCommandSetContext, RowAccessor } from "@microsoft/sp-listview-extensibility";
 
 
 let _sp: SPFI = null;
@@ -151,6 +151,23 @@ export const CalculateTotalYearsServed = (committeeTerms: ICommitteeMemberHistor
 
     return totalYears;
 };
+
+/**
+ * Parse the members ID of a given row from a CommandSet button click event.
+ * @param selectedRow Selected row from IListViewCommandSetExecuteEventParameters event.
+ * @returns ID in the form of a number.
+ */
+export const GetMemberIdFromSelectedRow = (selectedRow: RowAccessor): number => {
+    debugger;
+    // ! Some columns (MemberLookup) are only visible if they are in the current view which it will not be!
+    // TODO: Update this method so that it will query the list item if MemberLookup and MemberID are not found.
+    const selectedMemberLookup = selectedRow.getValueByName('MemberLookup');  // Most of the time we will want this field.
+    const selectedMemberId = selectedRow.getValueByName('MemberID');          // When a MemberLookup field is not present check for an ID field.
+    if (selectedMemberId === undefined && selectedMemberLookup === undefined)
+        return undefined;
+    const memberId: number = selectedMemberLookup ? selectedMemberLookup[0].lookupId : Number(selectedMemberId);
+    return memberId;
+}
 //#endregion
 
 

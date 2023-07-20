@@ -8,7 +8,7 @@ import {
 } from '@microsoft/sp-listview-extensibility';
 import { Dialog } from '@microsoft/sp-dialog';
 import { MyCommandSets } from '../../HelperMethods/MyCommandSets';
-import { getSP } from '../../HelperMethods/MyHelperMethods';
+import { GetMemberIdFromSelectedRow, getSP } from '../../HelperMethods/MyHelperMethods';
 import { MyLists } from '../../HelperMethods/MyLists';
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
@@ -66,10 +66,11 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
         console.log(event);
         const selectedRow: RowAccessor = event.selectedRows[0];
       
-        let selectedMemberLookup = selectedRow.getValueByName('MemberLookup');  // Most of the time we will want this field.
+        //let selectedMemberLookup = selectedRow.getValueByName('MemberLookup');  // Most of the time we will want this field.
         let selectedMemberId = selectedRow.getValueByName('ID');                // When a MemberLookup field is not present check for an ID field.
-        const memberId: number = selectedMemberLookup ? selectedMemberLookup[0].lookupId : Number(selectedMemberId)
-     
+        //const memberId: number = selectedMemberLookup ? selectedMemberLookup[0].lookupId : Number(selectedMemberId);
+        let memberId: number = GetMemberIdFromSelectedRow(selectedRow);
+
         const memberDetailPanel: React.ReactComponentElement<any> = React.createElement(CommitteeMemberDashboardPanel, { context: this.context, memberId: memberId });
         const panelDiv = document.createElement('div');
 
