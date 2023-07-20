@@ -9,8 +9,22 @@
       // ! This is the URL that will be launch on 'gulp serve'
       "pageUrl": "https://claringtonnet.sharepoint.com/sites/CMM/Lists/CommitteeMemberHistory",
       "customActions": {
-        "8ab5e7d2-4135-40a5-915b-2639810220aa": {
-          "location": "ClientSideExtension.ListViewCommandSet",
+        "e0526677-c5a5-489a-b306-a04f306fb242": {
+          "location": "ClientSideExtension.ListViewCommandSet.CommandBar",
+          "properties": {
+            "sampleTextOne": "One item is selected in the list",
+            "sampleTextTwo": "This command is always visible."
+          }
+        }
+      }
+    },
+        // Run 'gulp serve --config=renewCommitteeMember' to use this config.
+
+    "renewCommitteeMember": {
+      "pageUrl": "https://claringtonnet.sharepoint.com/sites/CMM/DemoCommittee",
+      "customActions": {
+        "e0526677-c5a5-489a-b306-a04f306fb242": {
+          "location": "ClientSideExtension.ListViewCommandSet.CommandBar",
           "properties": {
             "sampleTextOne": "One item is selected in the list",
             "sampleTextTwo": "This command is always visible."

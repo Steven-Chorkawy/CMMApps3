@@ -25,6 +25,14 @@
           "manifest": "./src/extensions/committeeMemberDetails/CommitteeMemberDetailsCommandSet.manifest.json"
         }
       ]
+    },
+    "renew-committee-member-command-set": {
+      "components": [
+        {
+          "entrypoint": "./lib/extensions/renewCommitteeMember/RenewCommitteeMemberCommandSet.js",
+          "manifest": "./src/extensions/renewCommitteeMember/RenewCommitteeMemberCommandSet.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -32,6 +40,7 @@
     "NewCommitteeMemberWebPartStrings": "lib/webparts/newCommitteeMember/loc/{locale}.js",
     "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js",
     "CommitteeMemberDashboardWebPartStrings": "lib/webparts/committeeMemberDashboard/loc/{locale}.js",
-    "CommitteeMemberDetailsCommandSetStrings": "lib/extensions/committeeMemberDetails/loc/{locale}.js"
+    "CommitteeMemberDetailsCommandSetStrings": "lib/extensions/committeeMemberDetails/loc/{locale}.js",
+    "RenewCommitteeMemberCommandSetStrings": "lib/extensions/renewCommitteeMember/loc/{locale}.js"
   }
 }
