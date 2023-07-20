@@ -14,7 +14,6 @@ import * as ReactDOM from 'react-dom';
 import * as React from 'react';
 import { CommitteeMemberDashboardPanel } from '../../ClaringtonComponents/CommitteeMemberDashboardPanel';
 
-
 /**
  * If your command set uses the ClientSideComponentProperties JSON input,
  * it will be deserialized into the BaseExtension.properties object.
@@ -32,14 +31,12 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
 
   private panelPlaceHolder: HTMLDivElement = null;
 
-
   public onInit(): Promise<void> {
     Log.info(LOG_SOURCE, 'Initialized CommitteeMemberDetailsCommandSet');
 
     getSP(this.context);
 
     this.panelPlaceHolder = document.body.appendChild(document.createElement("div"));
-
 
     // initial state of the command's visibility
     const compareOneCommand: Command = this.tryGetCommand('COMMAND_1');
@@ -73,11 +70,9 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
         let selectedMemberId = selectedRow.getValueByName('ID');                // When a MemberLookup field is not present check for an ID field.
         const memberId: number = selectedMemberLookup ? selectedMemberLookup[0].lookupId : Number(selectedMemberId)
      
-
-        //const memberDetailPanel: CommitteeMemberDashboardPanel = new CommitteeMemberDashboardPanel({ context: this.context, memberId: memberId });
         const memberDetailPanel: React.ReactComponentElement<any> = React.createElement(CommitteeMemberDashboardPanel, { context: this.context, memberId: memberId });
         const panelDiv = document.createElement('div');
-        
+
         ReactDOM.render(memberDetailPanel, panelDiv);
         break;
       default:
