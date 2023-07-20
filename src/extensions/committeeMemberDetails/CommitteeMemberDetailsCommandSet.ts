@@ -68,14 +68,17 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
       case MyCommandSets.MemberDetails:
         console.log(event);
         const selectedRow: RowAccessor = event.selectedRows[0];
-        debugger;
+      
         let selectedMemberLookup = selectedRow.getValueByName('MemberLookup');  // Most of the time we will want this field.
         let selectedMemberId = selectedRow.getValueByName('ID');                // When a MemberLookup field is not present check for an ID field.
         const memberId: number = selectedMemberLookup ? selectedMemberLookup[0].lookupId : Number(selectedMemberId)
-        debugger;        
+     
 
-        const memberDetailPanel: CommitteeMemberDashboardPanel = new CommitteeMemberDashboardPanel({ context: this.context, memberId: memberId });
-        memberDetailPanel.show();
+        //const memberDetailPanel: CommitteeMemberDashboardPanel = new CommitteeMemberDashboardPanel({ context: this.context, memberId: memberId });
+        const memberDetailPanel: React.ReactComponentElement<any> = React.createElement(CommitteeMemberDashboardPanel, { context: this.context, memberId: memberId });
+        const panelDiv = document.createElement('div');
+        
+        ReactDOM.render(memberDetailPanel, panelDiv);
         break;
       default:
         throw new Error('Unknown command');

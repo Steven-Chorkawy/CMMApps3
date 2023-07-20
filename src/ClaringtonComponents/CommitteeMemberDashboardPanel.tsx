@@ -1,27 +1,30 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Panel, PanelType } from 'office-ui-fabric-react';
-import { BaseDialog } from '@microsoft/sp-dialog';
+// import { BaseDialog } from '@microsoft/sp-dialog';
 import { CommitteeMemberDashboard } from './CommitteeMemberDashboard';
 
-export class CommitteeMemberDashboardPanel extends BaseDialog {
+export class CommitteeMemberDashboardPanel extends React.Component<any, any> {
     private _context: any = null;
     private _memberId: number = null;
+
     constructor(props: any) {
         super(props);
         this._context = props.context;
         this._memberId = props.memberId;
+        this.state = {
+            isOpen: true
+        }
     }
-    public render(): void {
-        debugger;
-        ReactDOM.render(<Panel
+    public render(): React.ReactElement<any, any> {
+        return <Panel
             isLightDismiss={false}
-            isOpen={true}
+            isOpen={this.state.isOpen}
             type={PanelType.large}
-            onDismissed={() => this.close()}
+            onDismiss={() => this.setState({ isOpen: false })}
         >
             <CommitteeMemberDashboard memberId={this._memberId} context={this._context} />
-        </Panel>, this.domElement);
+        </Panel>;
     }
 }
 
