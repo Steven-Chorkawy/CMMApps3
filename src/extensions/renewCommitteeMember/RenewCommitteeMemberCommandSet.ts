@@ -52,11 +52,6 @@ export default class RenewCommitteeMemberCommandSet extends BaseListViewCommandS
 
         ReactDOM.render(renewMemberPanel, panelDiv);
         break;
-      // case 'COMMAND_2':
-      //   Dialog.alert(`${this.properties.sampleTextTwo}`).catch(() => {
-      //     /* handle error */
-      //   });
-      //   break;
       default:
         throw new Error('Unknown command');
     }
