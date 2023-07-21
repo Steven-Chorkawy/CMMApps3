@@ -47,7 +47,7 @@ export default class RenewCommitteeMemberCommandSet extends BaseListViewCommandS
     switch (event.itemId) {
       case MyCommandSets.RenewCommitteeMember:
         const selectedRow: RowAccessor = event.selectedRows[0];
-        GetMemberIdFromSelectedRow(selectedRow).then(value => {
+          GetMemberIdFromSelectedRow(selectedRow).then(value => {
           const memberDetailPanel: React.ReactComponentElement<any> = React.createElement(RenewCommitteeMemberPanel, { context: this.context, memberId: value });
           const panelDiv = document.createElement('div');
           ReactDOM.render(memberDetailPanel, panelDiv);
@@ -68,8 +68,6 @@ export default class RenewCommitteeMemberCommandSet extends BaseListViewCommandS
       // This command should be hidden unless exactly one row is selected.
       compareOneCommand.visible = this.context.listView.selectedRows?.length === 1;
     }
-
-    // TODO: Add your logic here
 
     // You should call this.raiseOnChage() to update the command bar
     this.raiseOnChange();
