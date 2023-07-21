@@ -236,20 +236,11 @@ export const GetMemberIdFromFileRef = async (fileRef: string): Promise<number> =
  */
 export const GetMemberIdFromSelectedRow = async (selectedRow: RowAccessor): Promise<number> => {
     const fileRef = selectedRow.getValueByName('FileRef');
-    let output = null;
 
     // First check if this list is the Members list.
     // If this is the Members list then all we need is the ID.  
     // * Note: that this is the only list that we can use the ID from because it is the Members list.
-    if (fileRef.includes('/Lists/Members')) {
-        output = selectedRow.getValueByName('ID');
-    }
-    else {
-        output = await GetMemberIdFromFileRef(fileRef);
-    }
-
-    debugger;
-    return output;
+    return fileRef.includes('/Lists/Members') ? selectedRow.getValueByName('ID') : await GetMemberIdFromFileRef(fileRef);
 }
 //#endregion
 
