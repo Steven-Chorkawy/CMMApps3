@@ -9,8 +9,6 @@ import "@pnp/sp/files";
 import "@pnp/sp/folders";
 import "@pnp/sp/security";
 import { IContentTypeInfo } from "@pnp/sp/content-types";
-
-
 import ICommitteeFileItem from "../ClaringtonInterfaces/ICommitteeFileItem";
 import { MyLists } from "./MyLists";
 import { IItemAddResult, IItemUpdateResult } from "@pnp/sp/items";
@@ -18,7 +16,6 @@ import IMemberListItem from "../ClaringtonInterfaces/IMemberListItem";
 import { IFolderAddResult } from "@pnp/sp/folders";
 import { INewCommitteeMemberHistoryListItem, ICommitteeMemberHistoryListItem } from "../ClaringtonInterfaces/INewCommitteeMemberHistoryListItem";
 import { ListViewCommandSetContext, RowAccessor } from "@microsoft/sp-listview-extensibility";
-
 
 let _sp: SPFI = null;
 
@@ -151,25 +148,7 @@ export const CalculateTotalYearsServed = (committeeTerms: ICommitteeMemberHistor
 
     return totalYears;
 };
-
-/**
- * Parse the members ID of a given row from a CommandSet button click event.
- * @param selectedRow Selected row from IListViewCommandSetExecuteEventParameters event.
- * @returns ID in the form of a number.
- */
-export const GetMemberIdFromSelectedRow = (selectedRow: RowAccessor): number => {
-    debugger;
-    // ! Some columns (MemberLookup) are only visible if they are in the current view which it will not be!
-    // TODO: Update this method so that it will query the list item if MemberLookup and MemberID are not found.
-    const selectedMemberLookup = selectedRow.getValueByName('MemberLookup');  // Most of the time we will want this field.
-    const selectedMemberId = selectedRow.getValueByName('MemberID');          // When a MemberLookup field is not present check for an ID field.
-    if (selectedMemberId === undefined && selectedMemberLookup === undefined)
-        return undefined;
-    const memberId: number = selectedMemberLookup ? selectedMemberLookup[0].lookupId : Number(selectedMemberId);
-    return memberId;
-}
 //#endregion
-
 
 //#region Reads
 export const GetChoiceColumn = async (listTitle: string, columnName: string): Promise<string[]> => {
@@ -212,7 +191,6 @@ export const GetListOfActiveCommittees = async (): Promise<any> => {
     return await sp.web.lists.getByTitle(MyLists.CommitteeDocuments).items.filter(`OData__Status eq 'Active' and ContentTypeId eq '${COMMITTEE_FILE_CONTENT_TYPE_ID}'`)();
 };
 
-
 export const GetLibraryContentTypes = async (libraryTitle: string): Promise<string> => {
     const sp = getSP();
     const library = await sp.web.lists.getByTitle(libraryTitle);
@@ -230,8 +208,50 @@ export const GetMember = async (id: number): Promise<any> => await getSP().web.l
  * @returns ICommitteeMemberHistoryListItem[]
  */
 export const GetMembersTermHistory = async (id: number): Promise<ICommitteeMemberHistoryListItem[]> => await getSP().web.lists.getByTitle(MyLists.CommitteeMemberHistory).items.filter(`MemberID eq ${id}`)();
-//#endregion
 
+/**
+ * Get the Member ID from a given folder path.
+ * This method works for Lists and Document Libraries.
+ * @param fileRef Path to a folder/ Document Set.
+ * @returns ID of the member in the Members list.
+ */
+export const GetMemberIdFromFileRef = async (fileRef: string): Promise<number> => {
+    let output = NaN;
+    const sp = getSP();
+    let itemMetadata = await (await sp.web.getFolderByServerRelativePath(fileRef).getItem())();
+    // let output11 = await output1();
+    if (itemMetadata.MemberLookupId) {
+        output = itemMetadata.MemberLookupId;
+    }
+    else if (itemMetadata.MemberID) {
+        output = itemMetadata.MemberID;
+    }
+    return output;
+}
+
+/**
+ * Parse the members ID of a given row from a CommandSet button click event.
+ * @param selectedRow Selected row from IListViewCommandSetExecuteEventParameters event.
+ * @returns ID in the form of a number.
+ */
+export const GetMemberIdFromSelectedRow = async (selectedRow: RowAccessor): Promise<number> => {
+    const fileRef = selectedRow.getValueByName('FileRef');
+    let output = null;
+
+    // First check if this list is the Members list.
+    // If this is the Members list then all we need is the ID.  
+    // * Note: that this is the only list that we can use the ID from because it is the Members list.
+    if (fileRef.includes('/Lists/Members')) {
+        output = selectedRow.getValueByName('ID');
+    }
+    else {
+        output = await GetMemberIdFromFileRef(fileRef);
+    }
+
+    debugger;
+    return output;
+}
+//#endregion
 
 //#region Create
 /**
@@ -347,4 +367,3 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
     debugger;
 };
 //#endregion
-

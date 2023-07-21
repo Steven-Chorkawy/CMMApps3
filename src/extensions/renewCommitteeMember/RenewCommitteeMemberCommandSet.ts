@@ -3,11 +3,12 @@ import {
   BaseListViewCommandSet,
   Command,
   IListViewCommandSetExecuteEventParameters,
-  ListViewStateChangedEventArgs
+  ListViewStateChangedEventArgs,
+  RowAccessor
 } from '@microsoft/sp-listview-extensibility';
 import { Dialog } from '@microsoft/sp-dialog';
 import { MyCommandSets } from '../../HelperMethods/MyCommandSets';
-import { GetMemberIdFromSelectedRow } from '../../HelperMethods/MyHelperMethods';
+import { GetMemberIdFromSelectedRow, getSP } from '../../HelperMethods/MyHelperMethods';
 import * as React from 'react';
 import { RenewCommitteeMemberPanel } from '../../ClaringtonComponents/RenewCommitteeMember';
 import * as ReactDOM from 'react-dom';
@@ -29,6 +30,7 @@ export default class RenewCommitteeMemberCommandSet extends BaseListViewCommandS
 
   public onInit(): Promise<void> {
     Log.info(LOG_SOURCE, 'Initialized RenewCommitteeMemberCommandSet');
+    getSP(this.context);
 
     // initial state of the command's visibility
     const compareOneCommand: Command = this.tryGetCommand(MyCommandSets.RenewCommitteeMember);
@@ -44,13 +46,13 @@ export default class RenewCommitteeMemberCommandSet extends BaseListViewCommandS
     console.log(event);
     switch (event.itemId) {
       case MyCommandSets.RenewCommitteeMember:
-        debugger;
-        const memberId = GetMemberIdFromSelectedRow(event.selectedRows[0]);
-  
-        const renewMemberPanel: React.ReactComponentElement<any> = React.createElement(RenewCommitteeMemberPanel, { context: this.context, memberId: memberId });
-        const panelDiv = document.createElement('div');
-
-        ReactDOM.render(renewMemberPanel, panelDiv);
+        const selectedRow: RowAccessor = event.selectedRows[0];
+        GetMemberIdFromSelectedRow(selectedRow).then(value => {
+          debugger;
+          const memberDetailPanel: React.ReactComponentElement<any> = React.createElement(RenewCommitteeMemberPanel, { context: this.context, memberId: value });
+          const panelDiv = document.createElement('div');
+          ReactDOM.render(memberDetailPanel, panelDiv);
+        });
         break;
       default:
         throw new Error('Unknown command');
