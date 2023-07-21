@@ -11,7 +11,7 @@ import { RenewMemberComponent } from './RenewMemberComponent';
 export interface IRenewCommitteeMemberProps {
     description?: string;
     memberId: number;
-    context?: WebPartContext;
+    context: WebPartContext;
 }
 
 export interface IRenewCommitteeMemberState {
@@ -32,57 +32,38 @@ export class RenewCommitteeMember extends React.Component<IRenewCommitteeMemberP
     }
 
     public render(): React.ReactElement<any> {
-        const LINK_MEMBER_EDIT_FORM = { href: `/sites/CMM/Lists/Members/EditForm.aspx?ID=${this.props.memberId}` };
-        const LINK_MEMBER_HISTORY = { href: `/sites/CMM/Lists/CommitteeMemberHistory?FilterField1=MemberID&FilterValue1=${this.props.memberId}&sortField=_EndDate&isAscending=false` };
-        const LINK_EXAMPLE = { href: `#` };
         if (this.state.selectedMember) {
             return (
-                <div>
-                    <div>
-                        <Dashboard
-                            widgets={[
+                <Dashboard
+                    widgets={[
+                        {
+                            title: this.state.selectedMember.Title,
+                            desc: `Last updated ${OnFormatDate(new Date(this.state.selectedMember.Modified))}`,
+                            size: WidgetSize.Box,
+                            body: [
                                 {
-                                    title: "Renew Committee Member",
-                                    size: WidgetSize.Triple,
-                                    body: [{
-                                        id: 'renewMemberId',
-                                        title: 'Renew Member',
-                                        content: (<RenewMemberComponent />)
-                                    }]
-                                },
-                                {
-                                    title: this.state.selectedMember.Title,
-                                    desc: `Last updated ${OnFormatDate(new Date(this.state.selectedMember.Modified))}`,
-                                    size: WidgetSize.Single,
-                                    body: [
-                                        {
-                                            id: "t1",
-                                            title: "Tab 1",
-                                            content: (
-                                                <CommitteeMemberContactDetails member={this.state.selectedMember} />
-                                            ),
-                                        }
-                                    ],
-                                    link: LINK_MEMBER_EDIT_FORM,
-                                },
-                                // {
-                                //     title: "Committee History",
-                                //     size: WidgetSize.Single,
-                                //     body: [{
-                                //         id: 'id',
-                                //         title: 'Committee History',
-                                //         content: (<CommitteeMemberTermHistory memberID={this.state.selectedMember.ID} context={this.props.context} />)
-                                //     }],
-                                //     link: LINK_MEMBER_HISTORY,
-                                // },
-
-                            ]} />
-                    </div>
-                    {/* <hr />
-                    <div>
-                        {this.state.selectedMember && JSON.stringify(this.state.selectedMember)}
-                    </div> */}
-                </div>
+                                    id: "t1",
+                                    title: "Tab 1",
+                                    content: (
+                                        <div style={{ overflow: 'scroll' }}>
+                                            <CommitteeMemberContactDetails member={this.state.selectedMember} />
+                                            <hr />
+                                            <CommitteeMemberTermHistory memberID={this.state.selectedMember.ID} context={this.props.context} />
+                                        </div>
+                                    ),
+                                }
+                            ]
+                        },
+                        {
+                            title: "Renew Committee Member",
+                            size: WidgetSize.Box,
+                            body: [{
+                                id: 'renewMemberId',
+                                title: 'Renew Member',
+                                content: (<RenewMemberComponent context={this.props.context} />)
+                            }]
+                        }
+                    ]} />
             );
         }
         else {
@@ -108,6 +89,7 @@ export class RenewCommitteeMemberPanel extends React.Component<any, any> {
             isLightDismiss={false}
             isOpen={this.state.isOpen}
             type={PanelType.large}
+            allowTouchBodyScroll={false}
             onDismiss={() => this.setState({ isOpen: false })}
         >
             <RenewCommitteeMember memberId={this._memberId} context={this._context} />
