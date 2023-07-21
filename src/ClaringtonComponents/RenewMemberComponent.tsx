@@ -1,4 +1,4 @@
-import { ComboBox, DatePicker, IComboBoxOption } from '@fluentui/react';
+import { ComboBox, DatePicker, DefaultButton, IComboBoxOption, PrimaryButton } from '@fluentui/react';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import * as React from 'react';
 import { CONSOLE_LOG_ERROR, CalculateTermEndDate, GetChoiceColumn, GetCommitteeByName, GetListOfActiveCommittees, OnFormatDate, getSP } from '../HelperMethods/MyHelperMethods';
@@ -120,7 +120,22 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                                         formRenderProps.onChange(`Files`, { value: filePickerResult });
                                     }}
                                 />
-
+                                <div style={{ marginTop: "10px" }}>
+                                    <PrimaryButton
+                                        text='Submit'
+                                        type="submit"
+                                        style={{ margin: '5px' }}
+                                        // disabled={(this.state.saveStatus === NewMemberFormSaveStatus.Success || this.state.saveStatus === NewMemberFormSaveStatus.Error)}
+                                    />
+                                    <DefaultButton
+                                        text='Clear'
+                                        style={{ margin: '5px' }}
+                                        onClick={e => {
+                                            formRenderProps.onFormReset();
+                                            // this.setState({ saveStatus: NewMemberFormSaveStatus.NewForm, linkToCommitteeDocSet: [] });
+                                        }}
+                                    />
+                                </div>
                             </FormElement>
                         )}
                     />
