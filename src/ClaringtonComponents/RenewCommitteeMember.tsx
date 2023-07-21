@@ -1,14 +1,47 @@
+import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { Panel, PanelType } from 'office-ui-fabric-react';
 import * as React from 'react';
+import IMemberListItem from '../ClaringtonInterfaces/IMemberListItem';
+import { GetMember } from '../HelperMethods/MyHelperMethods';
+import { MyShimmer } from './MyShimmer';
 
-export class RenewCommitteeMember extends React.Component<any, any> {
+export interface IRenewCommitteeMemberProps {
+    description?: string;
+    memberId: number;
+    context?: WebPartContext;
+}
+
+export interface IRenewCommitteeMemberState {
+    selectedMember?: IMemberListItem;
+}
+
+export class RenewCommitteeMember extends React.Component<IRenewCommitteeMemberProps, IRenewCommitteeMemberState> {
 
     constructor(props: any) {
         super(props);
+        this.state = {
+            selectedMember: undefined
+        };
+
+        if (this.props.memberId) {
+            GetMember(this.props.memberId).then(member => this.setState({ selectedMember: member }));
+        }
     }
 
     public render(): React.ReactElement<any> {
-        return <div>hello world... Member ID: {this.props.memberId}</div>;
+        if (this.state.selectedMember) {
+            return (
+                <div>
+                    <div>hello world... Member ID: {this.props.memberId}</div>
+                    <div>
+                        {this.state.selectedMember && JSON.stringify(this.state.selectedMember)}
+                    </div>
+                </div>
+            );
+        }
+        else {
+            return <MyShimmer />;
+        }
     }
 }
 
