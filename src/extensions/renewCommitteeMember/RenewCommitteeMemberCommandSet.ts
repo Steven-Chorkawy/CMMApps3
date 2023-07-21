@@ -48,7 +48,6 @@ export default class RenewCommitteeMemberCommandSet extends BaseListViewCommandS
       case MyCommandSets.RenewCommitteeMember:
         const selectedRow: RowAccessor = event.selectedRows[0];
         GetMemberIdFromSelectedRow(selectedRow).then(value => {
-          debugger;
           const memberDetailPanel: React.ReactComponentElement<any> = React.createElement(RenewCommitteeMemberPanel, { context: this.context, memberId: value });
           const panelDiv = document.createElement('div');
           ReactDOM.render(memberDetailPanel, panelDiv);

@@ -130,7 +130,6 @@ export const CalculateTotalYearsServed = (committeeTerms: ICommitteeMemberHistor
 
         console.log(TERM);
         if (START_DATE > TODAY) {
-            debugger;
             console.log('Something went wrong!');
             continue; // Continue onto the next iteration. 
         }
@@ -250,11 +249,8 @@ export const GetMemberIdFromSelectedRow = async (selectedRow: RowAccessor): Prom
  */
 export const CreateCommitteeMemberHistoryItem = async (committeeMemberHistoryItem: INewCommitteeMemberHistoryListItem): Promise<void> => {
     const sp = getSP();
-
-    debugger;
     await sp.web.lists.getByTitle(MyLists.CommitteeMemberHistory).items.add({ ...committeeMemberHistoryItem });
-    debugger;
-
+ 
     // ? Why did I have this? 
     //const committeeMemberContactInfoRetention = await CalculateMemberInfoRetention(committeeMemberHistoryItem.SPFX_CommitteeMemberDisplayNameId);
 
@@ -343,7 +339,7 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
 
     // Step 4: Update Committee Member List Item to include this new committee.
     // TODO: How do I manage this relationship? 
-    debugger;
+  
     // Step 5: Create a committee member history list item record.
     await CreateCommitteeMemberHistoryItem({
         CommitteeName: committee.CommitteeName,
@@ -355,6 +351,5 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
         MemberLookupId: memberId,
         MemberID: memberId
     });
-    debugger;
 };
 //#endregion
