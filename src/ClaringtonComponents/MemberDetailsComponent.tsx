@@ -59,7 +59,6 @@ export class CommitteeMemberBreadCrumb extends React.Component<ICommitteeMemberB
                 href: `${LIBRARY_URL}`,
                 target: '_blank',
                 title: `View all ${this.props.committeeTerm.CommitteeName} committee members`
-                // onRender: e => { console.log('IBreadcrumbItem'); console.log(e); return <div>hello world!<div>{ }</div></div>; }
             },
             {
                 text: `${this.props.committeeTerm.Title}`,

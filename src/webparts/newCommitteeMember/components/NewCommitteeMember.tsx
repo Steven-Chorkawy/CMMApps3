@@ -48,16 +48,10 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
 
   private _onSubmit = async (values: any): Promise<void> => {
     try {
-      console.log('_onSubmit');
-      console.log(values);
-
       this.setState({ saveStatus: NewMemberFormSaveStatus.CreatingNewMember });
 
       // Step 1: Add the new member to the Members List.
       const newMember_IAR = await CreateNewMember(values.Member);
-
-      console.log('new member add results.');
-      console.log(newMember_IAR);
 
       // Step 2: Add the new member to committess if any are provided. 
       if (values.Committees) {
@@ -81,7 +75,7 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
       this.setState({ saveStatus: NewMemberFormSaveStatus.Success });
     } catch (error) {
       this.setState({ saveStatus: NewMemberFormSaveStatus.Error });
-      console.log("Something went wrong while saving new member!");
+      console.error("Something went wrong while saving new member!");
       console.error(error);
     }
   }

@@ -42,8 +42,6 @@ export default class RenewCommitteeMemberCommandSet extends BaseListViewCommandS
   }
 
   public onExecute(event: IListViewCommandSetExecuteEventParameters): void {
-    console.log('onExecute......');
-    console.log(event);
     switch (event.itemId) {
       case MyCommandSets.RenewCommitteeMember:
         const selectedRow: RowAccessor = event.selectedRows[0];
@@ -60,9 +58,7 @@ export default class RenewCommitteeMemberCommandSet extends BaseListViewCommandS
 
   private _onListViewStateChanged = (args: ListViewStateChangedEventArgs): void => {
     Log.info(LOG_SOURCE, 'List view state changed');
-    console.log('_onListViewStateChanged......');
-    console.log(args);
-
+ 
     const compareOneCommand: Command = this.tryGetCommand(MyCommandSets.RenewCommitteeMember);
     if (compareOneCommand) {
       // This command should be hidden unless exactly one row is selected.

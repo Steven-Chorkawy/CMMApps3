@@ -1,7 +1,7 @@
 import { ComboBox, DatePicker, DefaultButton, IComboBoxOption, PrimaryButton } from '@fluentui/react';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import * as React from 'react';
-import { CONSOLE_LOG_ERROR, CalculateTermEndDate, GetChoiceColumn, GetCommitteeByName, GetListOfActiveCommittees, OnFormatDate, getSP } from '../HelperMethods/MyHelperMethods';
+import { CONSOLE_LOG_ERROR, CalculateTermEndDate, GetChoiceColumn, GetCommitteeByName, GetListOfActiveCommittees, OnFormatDate, RenewCommitteeMember, getSP } from '../HelperMethods/MyHelperMethods';
 import { MyShimmer } from './MyShimmer';
 import { Field, Form, FormElement, FormRenderProps } from '@progress/kendo-react-form';
 import { MyComboBox, MyDatePicker } from './MyFormComponents';
@@ -44,6 +44,7 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
     private _onSubmit = async (values: any): Promise<void> => {
         console.log('_onSubmit');
         console.log(values);
+        RenewCommitteeMember();
     }
 
     public render(): React.ReactElement<any> {
@@ -58,6 +59,8 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                                     name={'committee'}
                                     label={'Committee'}
                                     component={MyComboBox}
+                                    validator={value => value ? "" : "Please Select a Committee."}
+                                    required={true}
                                     options={this.state.activeCommittees}
                                     onChange={e => {
                                         GetChoiceColumn(e.value, 'Status').then(statusValue => this.setState({ statusOptions: statusValue })).catch(CONSOLE_LOG_ERROR);
@@ -69,6 +72,8 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                                     name={'_Status'}
                                     label={'Status'}
                                     component={MyComboBox}
+                                    validator={value => value ? "" : "Please Select a Status."}
+                                    required={true}
                                     options={this.state.statusOptions ? this.state.statusOptions.map((f: any) => { return { key: f, text: f }; }) : []}
                                     disabled={!this.state.committeeFileItem}
                                 />
@@ -76,30 +81,33 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                                     name={'position'}
                                     label={'Position'}
                                     component={MyComboBox}
+                                    required={true}
                                     options={this.state.positionOptions ? this.state.positionOptions.map((f: any) => { return { key: f, text: f }; }) : []}
                                     disabled={!this.state.committeeFileItem}
+                                    validator={value => value ? "" : "Please Select a Position."}
                                 />
                                 <Field
                                     name={'StartDate'}
                                     label={'Term Start Date'}
-                                    //allowTextInput={true}
+                                    validator={value => value ? "" : "Please Select a Start Date."}
                                     formatDate={OnFormatDate}
-                                    component={MyDatePicker}
+                                    component={DatePicker}
                                     onChange={e => {
                                         debugger;
                                         const CALC_END_DATE = CalculateTermEndDate(e.value, this.state.committeeFileItem.TermLength);
                                         this.setState({ calculatedEndDate: CALC_END_DATE });
                                         formRenderProps.onChange(`_EndDate`, { value: CALC_END_DATE });
                                     }}
-                                    required={true}
-                                    validator={value => value ? "" : "Please Select a Start Date."}
+                                    isRequired={true}
                                     disabled={!this.state.committeeFileItem}
                                 />
                                 <Field
                                     name={`_EndDate`}
                                     label={'Term End Date'}
+                                    validator={value => value ? "" : "Please Select a End Date."}
                                     formatDate={OnFormatDate}
                                     component={DatePicker}
+                                    isRequired={true}
                                     disabled={!this.state.committeeFileItem}
                                 />
                                 <Field
@@ -125,7 +133,7 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                                         text='Submit'
                                         type="submit"
                                         style={{ margin: '5px' }}
-                                        // disabled={(this.state.saveStatus === NewMemberFormSaveStatus.Success || this.state.saveStatus === NewMemberFormSaveStatus.Error)}
+                                    // disabled={(this.state.saveStatus === NewMemberFormSaveStatus.Success || this.state.saveStatus === NewMemberFormSaveStatus.Error)}
                                     />
                                     <DefaultButton
                                         text='Clear'

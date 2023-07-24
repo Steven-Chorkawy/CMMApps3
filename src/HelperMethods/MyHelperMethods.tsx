@@ -128,9 +128,8 @@ export const CalculateTotalYearsServed = (committeeTerms: ICommitteeMemberHistor
         const TODAY = new Date();
         let endDate = new Date(TERM.OData__EndDate);
 
-        console.log(TERM);
+  
         if (START_DATE > TODAY) {
-            console.log('Something went wrong!');
             continue; // Continue onto the next iteration. 
         }
 
@@ -156,7 +155,7 @@ export const GetChoiceColumn = async (listTitle: string, columnName: string): Pr
         const choiceColumn: any = await sp.web.lists.getByTitle(listTitle).fields.getByTitle(columnName).select('Choices')();
         return choiceColumn.Choices;
     } catch (error) {
-        console.log('Something went wrong in GetChoiceColumn!');
+        console.error('Something went wrong in GetChoiceColumn!');
         console.error(error);
         return [];
     }
@@ -179,7 +178,7 @@ export const GetCommitteeByName = async (committeeName: string): Promise<ICommit
             throw Error(`Multiple '${committeeName}' found!`);
         }
     } catch (error) {
-        console.log('Something went wrong in GetChoiceColumn!');
+        console.error('Something went wrong in GetChoiceColumn!');
         console.error(error);
         return undefined;
     }
@@ -250,7 +249,7 @@ export const GetMemberIdFromSelectedRow = async (selectedRow: RowAccessor): Prom
 export const CreateCommitteeMemberHistoryItem = async (committeeMemberHistoryItem: INewCommitteeMemberHistoryListItem): Promise<void> => {
     const sp = getSP();
     await sp.web.lists.getByTitle(MyLists.CommitteeMemberHistory).items.add({ ...committeeMemberHistoryItem });
- 
+
     // ? Why did I have this? 
     //const committeeMemberContactInfoRetention = await CalculateMemberInfoRetention(committeeMemberHistoryItem.SPFX_CommitteeMemberDisplayNameId);
 
@@ -339,7 +338,7 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
 
     // Step 4: Update Committee Member List Item to include this new committee.
     // TODO: How do I manage this relationship? 
-  
+
     // Step 5: Create a committee member history list item record.
     await CreateCommitteeMemberHistoryItem({
         CommitteeName: committee.CommitteeName,
@@ -352,4 +351,8 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
         MemberID: memberId
     });
 };
+
+export const RenewCommitteeMember = async (): Promise<void> => {
+    console.log('RenewCommitteeMember started...');
+}
 //#endregion

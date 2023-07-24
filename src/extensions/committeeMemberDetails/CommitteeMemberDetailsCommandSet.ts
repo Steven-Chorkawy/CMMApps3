@@ -63,7 +63,6 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
         });
         break;
       case MyCommandSets.MemberDetails:
-        console.log(event);
         const selectedRow: RowAccessor = event.selectedRows[0];
 
         GetMemberIdFromSelectedRow(selectedRow).then(value => {
