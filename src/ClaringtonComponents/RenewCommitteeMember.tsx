@@ -39,7 +39,7 @@ export class RenewCommitteeMember extends React.Component<IRenewCommitteeMemberP
                         {
                             title: this.state.selectedMember.Title,
                             desc: `Last updated ${OnFormatDate(new Date(this.state.selectedMember.Modified))}`,
-                            size: WidgetSize.Box,
+                            size: WidgetSize.Double,
                             body: [
                                 {
                                     id: "t1",
