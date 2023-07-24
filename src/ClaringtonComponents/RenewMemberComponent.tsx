@@ -91,14 +91,13 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                                     label={'Term Start Date'}
                                     validator={value => value ? "" : "Please Select a Start Date."}
                                     formatDate={OnFormatDate}
-                                    component={DatePicker}
+                                    component={MyDatePicker}
                                     onChange={e => {
-                                        debugger;
                                         const CALC_END_DATE = CalculateTermEndDate(e.value, this.state.committeeFileItem.TermLength);
                                         this.setState({ calculatedEndDate: CALC_END_DATE });
                                         formRenderProps.onChange(`_EndDate`, { value: CALC_END_DATE });
                                     }}
-                                    isRequired={true}
+                                    required={true}
                                     disabled={!this.state.committeeFileItem}
                                 />
                                 <Field
@@ -106,8 +105,8 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                                     label={'Term End Date'}
                                     validator={value => value ? "" : "Please Select a End Date."}
                                     formatDate={OnFormatDate}
-                                    component={DatePicker}
-                                    isRequired={true}
+                                    component={MyDatePicker}
+                                    required={true}
                                     disabled={!this.state.committeeFileItem}
                                 />
                                 <Field
