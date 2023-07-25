@@ -10,6 +10,7 @@ import { FilePicker, IFilePickerResult } from '@pnp/spfx-controls-react';
 
 export interface IRenewMemberComponentProps {
     context: WebPartContext;
+    memberId: number;
 }
 
 export interface IRenewMemberComponentState {
@@ -53,10 +54,14 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                 <div>
                     <Form
                         onSubmit={this._onSubmit}
+                        initialValues={{
+                            MemberID: this.props.memberId,
+                            MemberLookUpId: this.props.memberId,
+                        }}
                         render={(formRenderProps: FormRenderProps) => (
                             <FormElement>
                                 <Field
-                                    name={'committee'}
+                                    name={'committeeName'}
                                     label={'Committee'}
                                     component={MyComboBox}
                                     validator={value => value ? "" : "Please Select a Committee."}
@@ -78,7 +83,7 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                                     disabled={!this.state.committeeFileItem}
                                 />
                                 <Field
-                                    name={'position'}
+                                    name={'Position'}
                                     label={'Position'}
                                     component={MyComboBox}
                                     required={true}
@@ -139,6 +144,7 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                                         style={{ margin: '5px' }}
                                         onClick={e => {
                                             formRenderProps.onFormReset();
+                                            this.setState({ committeeFileItem: undefined });
                                             // this.setState({ saveStatus: NewMemberFormSaveStatus.NewForm, linkToCommitteeDocSet: [] });
                                         }}
                                     />

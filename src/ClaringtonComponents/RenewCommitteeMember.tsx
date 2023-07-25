@@ -60,7 +60,7 @@ export class RenewCommitteeMember extends React.Component<IRenewCommitteeMemberP
                             body: [{
                                 id: 'renewMemberId',
                                 title: 'Renew Member',
-                                content: (<RenewMemberComponent context={this.props.context} />)
+                                content: (<RenewMemberComponent context={this.props.context} memberId={this.state.selectedMember.ID} />)
                             }]
                         }
                     ]} />
