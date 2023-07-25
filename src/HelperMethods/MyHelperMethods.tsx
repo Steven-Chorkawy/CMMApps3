@@ -216,7 +216,7 @@ export const GetMembersTermHistory = async (id: number): Promise<ICommitteeMembe
 export const GetMemberIdFromFileRef = async (fileRef: string): Promise<number> => {
     let output = NaN;
     const sp = getSP();
-    let itemMetadata = await (await sp.web.getFolderByServerRelativePath(fileRef).getItem())();
+    const itemMetadata = await (await sp.web.getFolderByServerRelativePath(fileRef).getItem())();
     // let output11 = await output1();
     if (itemMetadata.MemberLookupId) {
         output = itemMetadata.MemberLookupId;
@@ -380,9 +380,9 @@ export const RenewCommitteeMember = async (memberId: number, committeeMemberProp
     }
 
     committeeMemberDocumentSet = committeeMemberDocumentSet[0];
-
-    console.log(committeeMemberDocumentSet);
-    debugger;
+    // IDK why but getItemsByCAMLQuery() cannot get FileLeafRef for some reason!!
+    const documentSetTitle = await committeeLibrary.items.getById(committeeMemberDocumentSet.ID).select('FileLeafRef')();
+    committeeMemberDocumentSet.Title = documentSetTitle.FileLeafRef;
 
     // * Step 2: Update the Doc Sets Status, Position, Start Date, and End Date.
     const committeeMemberDocumentSet_UpdateResult = await committeeLibrary.items.getById(committeeMemberDocumentSet.ID).update({
@@ -392,17 +392,15 @@ export const RenewCommitteeMember = async (memberId: number, committeeMemberProp
         OData__EndDate: committeeMemberProperties._EndDate
     });
 
-    console.log(committeeMemberDocumentSet_UpdateResult);
-
     // * Step 3: Upload any attachments to the Doc Set.
 
     // * Step 4: Update Committee Member History.
     // This is an async method but we really don't need to wait for the results.
     CreateCommitteeMemberHistoryItem({
         Title: committeeMemberDocumentSet.Title,
-        CommitteeName: 'blah',
-        OData__EndDate: committeeMemberProperties._EndDate,
-        StartDate: committeeMemberProperties.StartDate,
+        CommitteeName: committeeMemberProperties.committeeName,
+        OData__EndDate: new Date(committeeMemberProperties._EndDate),
+        StartDate: new Date(committeeMemberProperties.StartDate),
         MemberID: memberId,
         MemberLookupId: memberId
     });

@@ -45,7 +45,14 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
     private _onSubmit = async (values: any): Promise<void> => {
         console.log('_onSubmit');
         console.log(values);
-        RenewCommitteeMember(this.props.memberId, values);
+        RenewCommitteeMember(this.props.memberId, values).then(value => {
+            console.log('Done submit!');
+            console.log(value);
+        })
+        .catch(reason => {
+            console.log('on submit failed!!');
+            console.log(reason);
+        });
     }
 
     public render(): React.ReactElement<any> {
