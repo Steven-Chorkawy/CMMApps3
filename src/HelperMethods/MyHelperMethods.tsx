@@ -108,7 +108,6 @@ export const CalculateMemberInfoRetention = async (memberId: number): Promise<{ 
     return { date: output, committee: committeeName };
 };
 
-
 export const CalculateTotalYearsServed = (committeeTerms: ICommitteeMemberHistoryListItem[]): number => {
     /**
      * Steps to confirm Total Years Served.
@@ -350,6 +349,12 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
     });
 };
 
+/**
+ * Renew a Committee Member by updating their Status, Position, Start Date, End Date, and upload new attachments in the Committee library.
+ * Also create a new list item in the Committee Member History list.  
+ * @param memberId ID from the Members list.
+ * @param committeeMemberProperties All properties and fields from the Renew Committee Member form.
+ */
 export const RenewCommitteeMember = async (memberId: number, committeeMemberProperties: any): Promise<void> => {
     console.log('RenewCommitteeMember started...');
     const sp = getSP();
