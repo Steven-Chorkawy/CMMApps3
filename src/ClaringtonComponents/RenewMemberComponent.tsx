@@ -45,7 +45,7 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
     private _onSubmit = async (values: any): Promise<void> => {
         console.log('_onSubmit');
         console.log(values);
-        RenewCommitteeMember();
+        RenewCommitteeMember(this.props.memberId, values);
     }
 
     public render(): React.ReactElement<any> {
@@ -54,10 +54,11 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                 <div>
                     <Form
                         onSubmit={this._onSubmit}
-                        initialValues={{
-                            MemberID: this.props.memberId,
-                            MemberLookUpId: this.props.memberId,
-                        }}
+                        // ! memberId is available via props.  No need to set its value in the form. 
+                        // initialValues={{
+                        //     MemberID: this.props.memberId,
+                        //     MemberLookUpId: this.props.memberId,
+                        // }}
                         render={(formRenderProps: FormRenderProps) => (
                             <FormElement>
                                 <Field

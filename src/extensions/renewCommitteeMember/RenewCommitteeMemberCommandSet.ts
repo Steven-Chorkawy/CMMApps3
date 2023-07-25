@@ -44,9 +44,14 @@ export default class RenewCommitteeMemberCommandSet extends BaseListViewCommandS
   public onExecute(event: IListViewCommandSetExecuteEventParameters): void {
     switch (event.itemId) {
       case MyCommandSets.RenewCommitteeMember:
+        console.log('onExecute...');
+        console.log(event);
         const selectedRow: RowAccessor = event.selectedRows[0];
-          GetMemberIdFromSelectedRow(selectedRow).then(value => {
-          const memberDetailPanel: React.ReactComponentElement<any> = React.createElement(RenewCommitteeMemberPanel, { context: this.context, memberId: value });
+        GetMemberIdFromSelectedRow(selectedRow).then(value => {
+          const memberDetailPanel: React.ReactComponentElement<any> = React.createElement(RenewCommitteeMemberPanel, {
+            context: this.context,
+            memberId: value
+          });
           const panelDiv = document.createElement('div');
           ReactDOM.render(memberDetailPanel, panelDiv);
         });
@@ -58,7 +63,7 @@ export default class RenewCommitteeMemberCommandSet extends BaseListViewCommandS
 
   private _onListViewStateChanged = (args: ListViewStateChangedEventArgs): void => {
     Log.info(LOG_SOURCE, 'List view state changed');
- 
+
     const compareOneCommand: Command = this.tryGetCommand(MyCommandSets.RenewCommitteeMember);
     if (compareOneCommand) {
       // This command should be hidden unless exactly one row is selected.

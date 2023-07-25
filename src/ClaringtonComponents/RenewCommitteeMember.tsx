@@ -8,8 +8,8 @@ import { Dashboard, WidgetSize } from '@pnp/spfx-controls-react/lib/Dashboard';
 import { CommitteeMemberContactDetails, CommitteeMemberTermHistory } from './MemberDetailsComponent';
 import { RenewMemberComponent } from './RenewMemberComponent';
 
+//#region Interfaces.  State and Props.
 export interface IRenewCommitteeMemberProps {
-    description?: string;
     memberId: number;
     context: WebPartContext;
 }
@@ -17,6 +17,11 @@ export interface IRenewCommitteeMemberProps {
 export interface IRenewCommitteeMemberState {
     selectedMember?: IMemberListItem;
 }
+
+export interface IRenewCommitteeMemberPanelProps extends IRenewCommitteeMemberProps {
+
+}
+//#endregion
 
 export class RenewCommitteeMember extends React.Component<IRenewCommitteeMemberProps, IRenewCommitteeMemberState> {
 
@@ -72,18 +77,14 @@ export class RenewCommitteeMember extends React.Component<IRenewCommitteeMemberP
     }
 }
 
-export class RenewCommitteeMemberPanel extends React.Component<any, any> {
-    private _context: any = null;
-    private _memberId: number = null;
-
+export class RenewCommitteeMemberPanel extends React.Component<IRenewCommitteeMemberPanelProps, any> {
     constructor(props: any) {
         super(props);
-        this._context = props.context;
-        this._memberId = props.memberId;
         this.state = {
             isOpen: true
         }
     }
+
     public render(): React.ReactElement<any, any> {
         return <Panel
             isLightDismiss={false}
@@ -92,7 +93,7 @@ export class RenewCommitteeMemberPanel extends React.Component<any, any> {
             allowTouchBodyScroll={false}
             onDismiss={() => this.setState({ isOpen: false })}
         >
-            <RenewCommitteeMember memberId={this._memberId} context={this._context} />
+            <RenewCommitteeMember {...this.props} />
         </Panel>;
     }
 }

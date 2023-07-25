@@ -128,7 +128,7 @@ export const CalculateTotalYearsServed = (committeeTerms: ICommitteeMemberHistor
         const TODAY = new Date();
         let endDate = new Date(TERM.OData__EndDate);
 
-  
+
         if (START_DATE > TODAY) {
             continue; // Continue onto the next iteration. 
         }
@@ -352,7 +352,19 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
     });
 };
 
-export const RenewCommitteeMember = async (): Promise<void> => {
+export const RenewCommitteeMember = async (memberId: number, committeeMemberProperties: any): Promise<void> => {
     console.log('RenewCommitteeMember started...');
+
+    // ? Do I need to use FileRef to get the document set or can I just use a combo of committeeName and MemberID to get the document set?
+
+    // Step 1: Get the Document set for the current Committee.
+
+    // Step 2: Update the Doc Sets Status, Position, Start Date, and End Date.
+
+    // Step 3: Upload any attachments to the Doc Set.
+
+    // Step 4: ... TBD ... Update other entities.
+
+    // Step 5: ... TBD ...
 }
 //#endregion
