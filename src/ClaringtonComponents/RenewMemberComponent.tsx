@@ -1,4 +1,4 @@
-import { ComboBox, DatePicker, DefaultButton, IComboBoxOption, PrimaryButton } from '@fluentui/react';
+import { DefaultButton, IComboBoxOption, PrimaryButton } from '@fluentui/react';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import * as React from 'react';
 import { CONSOLE_LOG_ERROR, CalculateTermEndDate, GetChoiceColumn, GetCommitteeByName, GetListOfActiveCommittees, OnFormatDate, RenewCommitteeMember, getSP } from '../HelperMethods/MyHelperMethods';
@@ -126,7 +126,6 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                                     hideLocalUploadTab={true}
                                     hideRecentTab={true}
                                     disabled={!this.state.committeeFileItem}
-                                    // onSave={(filePickerResult: IFilePickerResult[]) => this._pushFileAttachment(filePickerResult)}
                                     onSave={(filePickerResult: IFilePickerResult[]) => {
                                         console.log(filePickerResult);
                                         formRenderProps.onChange(`Files`, { value: filePickerResult });
@@ -137,7 +136,6 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                                         text='Submit'
                                         type="submit"
                                         style={{ margin: '5px' }}
-                                    // disabled={(this.state.saveStatus === NewMemberFormSaveStatus.Success || this.state.saveStatus === NewMemberFormSaveStatus.Error)}
                                     />
                                     <DefaultButton
                                         text='Clear'
@@ -145,7 +143,6 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                                         onClick={e => {
                                             formRenderProps.onFormReset();
                                             this.setState({ committeeFileItem: undefined });
-                                            // this.setState({ saveStatus: NewMemberFormSaveStatus.NewForm, linkToCommitteeDocSet: [] });
                                         }}
                                     />
                                 </div>
