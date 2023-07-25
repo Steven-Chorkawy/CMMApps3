@@ -354,17 +354,59 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
 
 export const RenewCommitteeMember = async (memberId: number, committeeMemberProperties: any): Promise<void> => {
     console.log('RenewCommitteeMember started...');
+    const sp = getSP();
+    const committeeLibrary = sp.web.lists.getByTitle(committeeMemberProperties.committeeName);
 
-    // ? Do I need to use FileRef to get the document set or can I just use a combo of committeeName and MemberID to get the document set?
+    // * Step 1: Get the Document set for the current Committee.
+    let committeeMemberDocumentSet = await committeeLibrary.getItemsByCAMLQuery({
+        ViewXml: `
+        <View>
+            <Query>
+                <Where>
+                <Eq>
+                    <FieldRef Name="MemberLookup"/>
+                    <Value Type="Lookup">${memberId}</Value>
+                </Eq>
+                </Where>
+            </Query>
+            <RowLimit>1</RowLimit>
+        </View>
+        `,
+    });
 
-    // Step 1: Get the Document set for the current Committee.
+    // If we have anything other than 1 result, something went wrong.
+    if (committeeMemberDocumentSet.length !== 1) {
+        throw "Something went wrong while querying Committee Member Document Set...";
+    }
 
-    // Step 2: Update the Doc Sets Status, Position, Start Date, and End Date.
+    committeeMemberDocumentSet = committeeMemberDocumentSet[0];
 
-    // Step 3: Upload any attachments to the Doc Set.
+    console.log(committeeMemberDocumentSet);
+    debugger;
 
-    // Step 4: ... TBD ... Update other entities.
+    // * Step 2: Update the Doc Sets Status, Position, Start Date, and End Date.
+    const committeeMemberDocumentSet_UpdateResult = await committeeLibrary.items.getById(committeeMemberDocumentSet.ID).update({
+        OData__Status: committeeMemberProperties._Status,
+        Position: committeeMemberProperties.Position,
+        StartDate: committeeMemberProperties.StartDate,
+        OData__EndDate: committeeMemberProperties._EndDate
+    });
 
-    // Step 5: ... TBD ...
+    console.log(committeeMemberDocumentSet_UpdateResult);
+
+    // * Step 3: Upload any attachments to the Doc Set.
+
+    // * Step 4: Update Committee Member History.
+    // This is an async method but we really don't need to wait for the results.
+    CreateCommitteeMemberHistoryItem({
+        Title: committeeMemberDocumentSet.Title,
+        CommitteeName: 'blah',
+        OData__EndDate: committeeMemberProperties._EndDate,
+        StartDate: committeeMemberProperties.StartDate,
+        MemberID: memberId,
+        MemberLookupId: memberId
+    });
+
+    // * Step 5: ... TBD Update something else?...
 }
 //#endregion
