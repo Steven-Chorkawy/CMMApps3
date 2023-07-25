@@ -396,6 +396,17 @@ export const RenewCommitteeMember = async (memberId: number, committeeMemberProp
     });
 
     // * Step 3: Upload any attachments to the Doc Set.
+    if (committeeMemberProperties.Files) {
+        const PATH_TO_DOC_SET = await FormatDocumentSetPath(committeeMemberProperties.committeeName, committeeMemberDocumentSet.Title);
+        committeeMemberProperties.Files.map((file: any) => {
+            file.downloadFileContent().then((fileContent: any) => {
+                sp.web.getFolderByServerRelativePath(PATH_TO_DOC_SET).files.addUsingPath(file.fileName, fileContent, { Overwrite: true }).catch(reason => {
+                    console.error('Failed to upload attachment');
+                    console.error(reason);
+                });
+            });
+        });
+    }
 
     // * Step 4: Update Committee Member History.
     // This is an async method but we really don't need to wait for the results.
