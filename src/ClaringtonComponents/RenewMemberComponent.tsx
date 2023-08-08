@@ -9,7 +9,6 @@ import ICommitteeFileItem from '../ClaringtonInterfaces/ICommitteeFileItem';
 import { FilePicker, IFilePickerResult } from '@pnp/spfx-controls-react';
 import { CMMFormStatus } from '../ClaringtonInterfaces/CMMFormStatusEnum';
 
-
 export interface IRenewMemberComponentProps {
     context: WebPartContext;
     memberId: number;
@@ -154,7 +153,6 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                                         formRenderProps.onChange(`Files`, { value: filePickerResult });
                                     }}
                                 />
-
                                 <div style={{ marginTop: "10px" }}>
                                     {
                                         this.state.formStatus === CMMFormStatus.Processing &&
@@ -182,7 +180,6 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                                         </MessageBar>
                                     }
                                 </div>
-
                                 <div style={{ marginTop: "10px" }}>
                                     <PrimaryButton
                                         text='Submit'
