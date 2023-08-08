@@ -9,10 +9,38 @@
           "manifest": "./src/webparts/newCommitteeMember/NewCommitteeMemberWebPart.manifest.json"
         }
       ]
+    },
+    "committee-member-dashboard-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/committeeMemberDashboard/CommitteeMemberDashboardWebPart.js",
+          "manifest": "./src/webparts/committeeMemberDashboard/CommitteeMemberDashboardWebPart.manifest.json"
+        }
+      ]
+    },
+    "committee-member-details-command-set": {
+      "components": [
+        {
+          "entrypoint": "./lib/extensions/committeeMemberDetails/CommitteeMemberDetailsCommandSet.js",
+          "manifest": "./src/extensions/committeeMemberDetails/CommitteeMemberDetailsCommandSet.manifest.json"
+        }
+      ]
+    },
+    "renew-committee-member-command-set": {
+      "components": [
+        {
+          "entrypoint": "./lib/extensions/renewCommitteeMember/RenewCommitteeMemberCommandSet.js",
+          "manifest": "./src/extensions/renewCommitteeMember/RenewCommitteeMemberCommandSet.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
   "localizedResources": {
-    "NewCommitteeMemberWebPartStrings": "lib/webparts/newCommitteeMember/loc/{locale}.js"
+    "NewCommitteeMemberWebPartStrings": "lib/webparts/newCommitteeMember/loc/{locale}.js",
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js",
+    "CommitteeMemberDashboardWebPartStrings": "lib/webparts/committeeMemberDashboard/loc/{locale}.js",
+    "CommitteeMemberDetailsCommandSetStrings": "lib/extensions/committeeMemberDetails/loc/{locale}.js",
+    "RenewCommitteeMemberCommandSetStrings": "lib/extensions/renewCommitteeMember/loc/{locale}.js"
   }
 }

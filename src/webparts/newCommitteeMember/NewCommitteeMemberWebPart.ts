@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import { Version } from '@microsoft/sp-core-library';
 import {
   IPropertyPaneConfiguration,
   PropertyPaneTextField
@@ -11,6 +10,7 @@ import { IReadonlyTheme } from '@microsoft/sp-component-base';
 import * as strings from 'NewCommitteeMemberWebPartStrings';
 import NewCommitteeMember from './components/NewCommitteeMember';
 import { INewCommitteeMemberProps } from './components/INewCommitteeMemberProps';
+import { getSP } from '../../HelperMethods/MyHelperMethods';
 
 export interface INewCommitteeMemberWebPartProps {
   description: string;
@@ -29,7 +29,8 @@ export default class NewCommitteeMemberWebPart extends BaseClientSideWebPart<INe
         isDarkTheme: this._isDarkTheme,
         environmentMessage: this._environmentMessage,
         hasTeamsContext: !!this.context.sdks.microsoftTeams,
-        userDisplayName: this.context.pageContext.user.displayName
+        userDisplayName: this.context.pageContext.user.displayName,
+        context: this.context
       }
     );
 
@@ -39,7 +40,9 @@ export default class NewCommitteeMemberWebPart extends BaseClientSideWebPart<INe
   protected onInit(): Promise<void> {
     this._environmentMessage = this._getEnvironmentMessage();
 
-    return super.onInit();
+    return super.onInit().then(() => {
+      getSP(this.context);
+    });
   }
 
   private _getEnvironmentMessage(): string {
@@ -72,9 +75,9 @@ export default class NewCommitteeMemberWebPart extends BaseClientSideWebPart<INe
     ReactDom.unmountComponentAtNode(this.domElement);
   }
 
-  protected get dataVersion(): Version {
-    return Version.parse('1.0');
-  }
+  // protected get dataVersion(): Version {
+  //   return Version.parse('1.0');
+  // }
 
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
     return {

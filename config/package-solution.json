@@ -30,7 +30,13 @@
         "title": "cmm-apps Feature",
         "description": "The feature that activates elements of the cmm-apps solution.",
         "id": "d3786063-c966-4925-8a6f-51b51d28890c",
-        "version": "1.0.0.0"
+        "version": "1.0.0.0",
+        "assets": {
+          "elementManifests": [
+            "elements.xml",
+            "ClientSideInstance.xml"
+          ]
+        }
       }
     ]
   },

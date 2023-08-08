@@ -1,7 +1,7 @@
 {
   "@microsoft/generator-sharepoint": {
     "plusBeta": false,
-    "isCreatingSolution": true,
+    "isCreatingSolution": false,
     "version": "1.15.2",
     "libraryName": "cmm-apps",
     "libraryId": "1cdf0197-80d6-41f7-8b93-f190a7ec0fca",
@@ -11,6 +11,12 @@
     "solutionShortDescription": "cmm-apps description",
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
-    "componentType": "webpart"
+    "nodeVersion": "16.18.1",
+    "sdksVersions": {
+      "@microsoft/microsoft-graph-client": "3.0.2",
+      "@microsoft/teams-js": "2.9.1"
+    },
+    "componentType": "extension",
+    "extensionType": "ListViewCommandSet"
   }
 }

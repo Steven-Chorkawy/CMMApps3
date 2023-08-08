@@ -1,6 +1,6 @@
 require('@rushstack/eslint-config/patch/modern-module-resolution');
 module.exports = {
-  extends: ['@microsoft/eslint-config-spfx/lib/profiles/react'],
+  extends: ['@microsoft/eslint-config-spfx/lib/profiles/default'],
   parserOptions: { tsconfigRootDir: __dirname },
   overrides: [
     {
@@ -79,7 +79,7 @@ module.exports = {
         //                    This rule should be suppressed only in very special cases such as JSON.stringify()
         //                    where the type really can be anything.  Even if the type is flexible, another type
         //                    may be more appropriate such as "unknown", "{}", or "Record<k,V>".
-        '@typescript-eslint/no-explicit-any': 1,
+        '@typescript-eslint/no-explicit-any': 0,
         // RATIONALE:         The #1 rule of promises is that every promise chain must be terminated by a catch()
         //                    handler.  Thus wherever a Promise arises, the code must either append a catch handler,
         //                    or else return the object to a caller (who assumes this responsibility).  Unterminated
@@ -118,7 +118,7 @@ module.exports = {
         //
         // STANDARDIZED BY:   @typescript-eslint\eslint-plugin\dist\configs\recommended.json
         // Set to 1 (warning) or 2 (error) to enable the rule
-        '@typescript-eslint/no-parameter-properties': 0,
+        '@typescript-eslint/parameter-properties': 0,
         // RATIONALE:         When left in shipping code, unused variables often indicate a mistake.  Dead code
         //                    may impact performance.
         //
@@ -346,33 +346,7 @@ module.exports = {
         '**/test/*.ts',
         '**/test/*.tsx'
       ],
-      rules: {
-        'no-new': 0,
-        'class-name': 0,
-        'export-name': 0,
-        forin: 0,
-        'label-position': 0,
-        'member-access': 2,
-        'no-arg': 0,
-        'no-console': 0,
-        'no-construct': 0,
-        'no-duplicate-variable': 2,
-        'no-eval': 0,
-        'no-function-expression': 2,
-        'no-internal-module': 2,
-        'no-shadowed-variable': 2,
-        'no-switch-case-fall-through': 2,
-        'no-unnecessary-semicolons': 2,
-        'no-unused-expression': 2,
-        'no-with-statement': 2,
-        semicolon: 2,
-        'trailing-comma': 0,
-        typedef: 0,
-        'typedef-whitespace': 0,
-        'use-named-parameter': 2,
-        'variable-name': 0,
-        whitespace: 0
-      }
+      rules: {}
     }
   ]
 };
