@@ -1,4 +1,4 @@
-import { DefaultButton, IComboBoxOption, PrimaryButton } from '@fluentui/react';
+import { DefaultButton, IComboBoxOption, MessageBar, MessageBarType, PrimaryButton, ProgressIndicator } from '@fluentui/react';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import * as React from 'react';
 import { CONSOLE_LOG_ERROR, CalculateTermEndDate, GetChoiceColumn, GetCommitteeByName, GetListOfActiveCommittees, OnFormatDate, RenewCommitteeMember, getSP } from '../HelperMethods/MyHelperMethods';
@@ -7,6 +7,8 @@ import { Field, Form, FormElement, FormRenderProps } from '@progress/kendo-react
 import { MyComboBox, MyDatePicker } from './MyFormComponents';
 import ICommitteeFileItem from '../ClaringtonInterfaces/ICommitteeFileItem';
 import { FilePicker, IFilePickerResult } from '@pnp/spfx-controls-react';
+import { CMMFormStatus } from '../ClaringtonInterfaces/CMMFormStatusEnum';
+
 
 export interface IRenewMemberComponentProps {
     context: WebPartContext;
@@ -20,6 +22,7 @@ export interface IRenewMemberComponentState {
     committeeFileItem?: ICommitteeFileItem;
     selectedStartDate?: Date;
     calculatedEndDate?: Date;
+    formStatus: CMMFormStatus;
 }
 
 export class RenewMemberComponent extends React.Component<IRenewMemberComponentProps, IRenewMemberComponentState> {
@@ -28,7 +31,8 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
 
         this.state = {
             activeCommittees: [],
-            committeeFileItem: undefined
+            committeeFileItem: undefined,
+            formStatus: CMMFormStatus.NewForm
         };
 
         GetListOfActiveCommittees().then(committees => {
@@ -45,14 +49,25 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
     private _onSubmit = async (values: any): Promise<void> => {
         console.log('_onSubmit');
         console.log(values);
+
+        this.setState({
+            formStatus: CMMFormStatus.Processing
+        });
+
         RenewCommitteeMember(this.props.memberId, values).then(value => {
             console.log('Done submit!');
             console.log(value);
+            this.setState({
+                formStatus: CMMFormStatus.Success
+            });
         })
-        .catch(reason => {
-            console.log('on submit failed!!');
-            console.log(reason);
-        });
+            .catch(reason => {
+                console.log('on submit failed!!');
+                console.log(reason);
+                this.setState({
+                    formStatus: CMMFormStatus.Error
+                });
+            });
     }
 
     public render(): React.ReactElement<any> {
@@ -139,18 +154,51 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                                         formRenderProps.onChange(`Files`, { value: filePickerResult });
                                     }}
                                 />
+
+                                <div style={{ marginTop: "10px" }}>
+                                    {
+                                        this.state.formStatus === CMMFormStatus.Processing &&
+                                        <ProgressIndicator
+                                            label="Renewing Committee member..."
+                                            description={<div>
+                                                Updating...
+                                            </div>}
+                                        />
+                                    }
+                                    {
+                                        this.state.formStatus === CMMFormStatus.Success &&
+                                        <MessageBar messageBarType={MessageBarType.success} isMultiline={true}>
+                                            <div>
+                                                Success! Committee member has been renewed.
+                                            </div>
+                                        </MessageBar>
+                                    }
+                                    {
+                                        this.state.formStatus === CMMFormStatus.Error &&
+                                        <MessageBar messageBarType={MessageBarType.error} isMultiline={true}>
+                                            <div>
+                                                Error!  Something went wrong while renewing committee member.
+                                            </div>
+                                        </MessageBar>
+                                    }
+                                </div>
+
                                 <div style={{ marginTop: "10px" }}>
                                     <PrimaryButton
                                         text='Submit'
                                         type="submit"
                                         style={{ margin: '5px' }}
+                                        disabled={this.state.formStatus === CMMFormStatus.Processing || this.state.formStatus === CMMFormStatus.Success}
                                     />
                                     <DefaultButton
                                         text='Clear'
                                         style={{ margin: '5px' }}
                                         onClick={e => {
                                             formRenderProps.onFormReset();
-                                            this.setState({ committeeFileItem: undefined });
+                                            this.setState({
+                                                committeeFileItem: undefined,
+                                                formStatus: CMMFormStatus.NewForm
+                                            });
                                         }}
                                     />
                                 </div>
