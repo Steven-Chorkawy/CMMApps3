@@ -33,7 +33,7 @@
     },
     // Run 'gulp serve --config=committeeMemberDetails' to use this config.
     "committeeMemberDetails": {
-      "pageUrl": "https://claringtonnet.sharepoint.com/sites/CMM/Lists/CommitteeMemberHistory",
+      "pageUrl": "https://claringtonnet.sharepoint.com/sites/CMM/DemoCommittee",
       "customActions": {
         "8ab5e7d2-4135-40a5-915b-2639810220aa": {
           "location": "ClientSideExtension.ListViewCommandSet",

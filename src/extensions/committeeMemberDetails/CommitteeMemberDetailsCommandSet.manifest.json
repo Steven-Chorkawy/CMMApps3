@@ -19,20 +19,6 @@
       },
       "iconImageUrl": "icons/request.png",
       "type": "command"
-    },
-    "COMMAND_1": {
-      "title": {
-        "default": "Command One"
-      },
-      "iconImageUrl": "icons/request.png",
-      "type": "command"
-    },
-    "COMMAND_2": {
-      "title": {
-        "default": "Command Two"
-      },
-      "iconImageUrl": "icons/cancel.png",
-      "type": "command"
     }
   }
 }
