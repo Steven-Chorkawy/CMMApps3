@@ -6,7 +6,6 @@ import {
   ListViewStateChangedEventArgs,
   RowAccessor
 } from '@microsoft/sp-listview-extensibility';
-import { Dialog } from '@microsoft/sp-dialog';
 import { MyCommandSets } from '../../HelperMethods/MyCommandSets';
 import { GetMemberIdFromSelectedRow, getSP } from '../../HelperMethods/MyHelperMethods';
 import { MyLists } from '../../HelperMethods/MyLists';
@@ -39,10 +38,8 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
     this.panelPlaceHolder = document.body.appendChild(document.createElement("div"));
 
     // initial state of the command's visibility
-    const compareOneCommand: Command = this.tryGetCommand('COMMAND_1');
     const compareMemberDetailsCommand: Command = this.tryGetCommand(MyCommandSets.MemberDetails);
 
-    compareOneCommand.visible = false;
     compareMemberDetailsCommand.visible = false;
 
     this.context.listView.listViewStateChangedEvent.add(this, this._onListViewStateChanged);
@@ -52,16 +49,6 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
 
   public onExecute(event: IListViewCommandSetExecuteEventParameters): void {
     switch (event.itemId) {
-      case 'COMMAND_1':
-        Dialog.alert(`${this.properties.sampleTextOne}`).catch(() => {
-          /* handle error */
-        });
-        break;
-      case 'COMMAND_2':
-        Dialog.alert(`${this.properties.sampleTextTwo}`).catch(() => {
-          /* handle error */
-        });
-        break;
       case MyCommandSets.MemberDetails:
         const selectedRow: RowAccessor = event.selectedRows[0];
 
@@ -79,12 +66,7 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
   private _onListViewStateChanged = (args: ListViewStateChangedEventArgs): void => {
     Log.info(LOG_SOURCE, 'List view state changed');
 
-    const compareOneCommand: Command = this.tryGetCommand('COMMAND_1');
     const compareMemberDetailsCommand: Command = this.tryGetCommand(MyCommandSets.MemberDetails)
-    if (compareOneCommand) {
-      // This command should be hidden unless exactly one row is selected.
-      compareOneCommand.visible = this.context.listView.selectedRows?.length === 1;
-    }
 
     if (compareMemberDetailsCommand) {
       if (this.context.listView.list.title === MyLists.Members || this.context.listView.columns.some(e => e.field.internalName === 'MemberLookup')) {

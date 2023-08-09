@@ -320,7 +320,7 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
         OData__Status: committee._Status,
         OData__EndDate: committee._EndDate,
         StartDate: committee.StartDate,
-        //     //SPFX_CommitteeMemberDisplayNameId: memberId
+        MemberLookupId:memberId
     });
 
     // Step 3: Upload Attachments. 
