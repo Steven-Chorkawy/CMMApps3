@@ -12,6 +12,7 @@ import { MyLists } from '../../HelperMethods/MyLists';
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
 import { CommitteeMemberDashboardPanel } from '../../ClaringtonComponents/CommitteeMemberDashboardPanel';
+import { AddMemberDialogBase } from '../../ClaringtonComponents/AddMemberDialog';
 
 /**
  * If your command set uses the ClientSideComponentProperties JSON input,
@@ -62,9 +63,10 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
           ReactDOM.render(memberDetailPanel, panelDiv);
         });
         break;
-        case MyCommandSets.AddMember:
-          alert('Add Member Clicked!');
-          break;
+      case MyCommandSets.AddMember:
+        const addMemberDialog: AddMemberDialogBase = new AddMemberDialogBase();
+        addMemberDialog.show();
+        break;
       default:
         throw new Error('Unknown command');
     }

@@ -130,7 +130,7 @@ export class NewCommitteeMemberFormItem extends React.Component<INewCommitteeMem
                         this.props.formRenderProps.onChange(`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}]._EndDate`, { value: CALC_END_DATE });
                     }}
                     disabled={!this.state.committeeFileItem}
-                    required={true}
+                    required={this.props.formRenderProps.valueGetter('_Status') === 'Successful'} // TODO: This should only be required if the status is 'Successful.'
                     validator={value => value ? "" : "Please Select a Start Date."}
                 />
                 {
