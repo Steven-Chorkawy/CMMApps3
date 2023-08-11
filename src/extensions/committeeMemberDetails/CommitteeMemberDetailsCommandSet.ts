@@ -39,8 +39,10 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
 
     // initial state of the command's visibility
     const compareMemberDetailsCommand: Command = this.tryGetCommand(MyCommandSets.MemberDetails);
+    const compareAddMemberCommand: Command = this.tryGetCommand(MyCommandSets.AddMember);
 
     compareMemberDetailsCommand.visible = false;
+    compareAddMemberCommand.visible = true;   // This command should always be visible.
 
     this.context.listView.listViewStateChangedEvent.add(this, this._onListViewStateChanged);
 
@@ -48,16 +50,21 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
   }
 
   public onExecute(event: IListViewCommandSetExecuteEventParameters): void {
+    console.log('member details onExecute event...');
+    console.log(event);
+    debugger;
     switch (event.itemId) {
       case MyCommandSets.MemberDetails:
         const selectedRow: RowAccessor = event.selectedRows[0];
-
         GetMemberIdFromSelectedRow(selectedRow).then(value => {
           const memberDetailPanel: React.ReactComponentElement<any> = React.createElement(CommitteeMemberDashboardPanel, { context: this.context, memberId: value });
           const panelDiv = document.createElement('div');
           ReactDOM.render(memberDetailPanel, panelDiv);
         });
         break;
+        case MyCommandSets.AddMember:
+          alert('Add Member Clicked!');
+          break;
       default:
         throw new Error('Unknown command');
     }
@@ -65,6 +72,10 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
 
   private _onListViewStateChanged = (args: ListViewStateChangedEventArgs): void => {
     Log.info(LOG_SOURCE, 'List view state changed');
+
+    console.log('member details ListViewStateChange...');
+    console.log(args);
+    debugger;
 
     const compareMemberDetailsCommand: Command = this.tryGetCommand(MyCommandSets.MemberDetails)
 
