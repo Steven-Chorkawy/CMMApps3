@@ -12,6 +12,7 @@ import { MyLists } from '../../HelperMethods/MyLists';
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
 import { CommitteeMemberDashboardPanel } from '../../ClaringtonComponents/CommitteeMemberDashboardPanel';
+import { AddMemberDialogBase } from '../../ClaringtonComponents/AddMemberDialog';
 
 /**
  * If your command set uses the ClientSideComponentProperties JSON input,
@@ -39,8 +40,10 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
 
     // initial state of the command's visibility
     const compareMemberDetailsCommand: Command = this.tryGetCommand(MyCommandSets.MemberDetails);
+    const compareAddMemberCommand: Command = this.tryGetCommand(MyCommandSets.AddMember);
 
     compareMemberDetailsCommand.visible = false;
+    compareAddMemberCommand.visible = true;   // This command should always be visible.
 
     this.context.listView.listViewStateChangedEvent.add(this, this._onListViewStateChanged);
 
@@ -48,15 +51,21 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
   }
 
   public onExecute(event: IListViewCommandSetExecuteEventParameters): void {
+    console.log('member details onExecute event...');
+    console.log(event);
+    debugger;
     switch (event.itemId) {
       case MyCommandSets.MemberDetails:
         const selectedRow: RowAccessor = event.selectedRows[0];
-
         GetMemberIdFromSelectedRow(selectedRow).then(value => {
           const memberDetailPanel: React.ReactComponentElement<any> = React.createElement(CommitteeMemberDashboardPanel, { context: this.context, memberId: value });
           const panelDiv = document.createElement('div');
           ReactDOM.render(memberDetailPanel, panelDiv);
         });
+        break;
+      case MyCommandSets.AddMember:
+        const addMemberDialog: AddMemberDialogBase = new AddMemberDialogBase();
+        addMemberDialog.show();
         break;
       default:
         throw new Error('Unknown command');
@@ -66,14 +75,15 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
   private _onListViewStateChanged = (args: ListViewStateChangedEventArgs): void => {
     Log.info(LOG_SOURCE, 'List view state changed');
 
+    console.log('member details ListViewStateChange...');
+    console.log(args);
+    debugger;
+
     const compareMemberDetailsCommand: Command = this.tryGetCommand(MyCommandSets.MemberDetails)
 
     if (compareMemberDetailsCommand) {
-      if (this.context.listView.list.title === MyLists.Members || this.context.listView.columns.some(e => e.field.internalName === 'MemberLookup')) {
-        // Only show when in the Members list, when the current list has a 'MemberLookup' field, and when one row is selected.
-        // No need to check if MemberLookup has a value here.  The display form will handle that with error messages.
-        compareMemberDetailsCommand.visible = this.context.listView.selectedRows?.length === 1;
-      }
+      // No need to check if MemberLookup has a value here.  The display form will handle that with error messages.
+      compareMemberDetailsCommand.visible = this.context.listView.selectedRows?.length === 1;
     }
 
     // You should call this.raiseOnChage() to update the command bar

@@ -19,6 +19,13 @@
       },
       "iconImageUrl": "icons/request.png",
       "type": "command"
+    },
+    "COMMAND_ADD_MEMBER": {
+      "title": {
+        "default": "Add Member"
+      },
+      "iconImageUrl": "icons/request.png",
+      "type": "command"
     }
   }
 }

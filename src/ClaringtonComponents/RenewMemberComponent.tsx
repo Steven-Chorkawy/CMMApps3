@@ -39,8 +39,6 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
             committees.map((committee: any) => {
                 committeeMapHolder.push({ key: committee.Title, text: committee.Title });
             });
-            // TODO: Delete this line.
-            committeeMapHolder.push({ key: 'sample', text: 'test_DELETE_ME' });
             this.setState({ activeCommittees: committeeMapHolder });
         });
     }
