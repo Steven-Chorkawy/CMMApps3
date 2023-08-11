@@ -156,7 +156,7 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
                   text='Submit'
                   type="submit"
                   style={{ margin: '5px' }}
-                  disabled={(this.state.saveStatus === NewMemberFormSaveStatus.Success || this.state.saveStatus === NewMemberFormSaveStatus.Error)}
+                  disabled={(this.state.saveStatus === NewMemberFormSaveStatus.Success)}
                 />
                 <DefaultButton
                   text='Clear'
