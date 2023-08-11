@@ -69,11 +69,8 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
     const compareMemberDetailsCommand: Command = this.tryGetCommand(MyCommandSets.MemberDetails)
 
     if (compareMemberDetailsCommand) {
-      if (this.context.listView.list.title === MyLists.Members || this.context.listView.columns.some(e => e.field.internalName === 'MemberLookup')) {
-        // Only show when in the Members list, when the current list has a 'MemberLookup' field, and when one row is selected.
-        // No need to check if MemberLookup has a value here.  The display form will handle that with error messages.
-        compareMemberDetailsCommand.visible = this.context.listView.selectedRows?.length === 1;
-      }
+      // No need to check if MemberLookup has a value here.  The display form will handle that with error messages.
+      compareMemberDetailsCommand.visible = this.context.listView.selectedRows?.length === 1;
     }
 
     // You should call this.raiseOnChage() to update the command bar
