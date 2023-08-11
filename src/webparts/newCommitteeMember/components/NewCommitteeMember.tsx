@@ -106,7 +106,7 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
                 <Field name={'Member.WorkCity'} label={'City'} component={TextField} />
                 <Field name={'Member.PostalCode'} label={'Postal Code'} component={PostalCodeInput} onChange={e => formRenderProps.onChange(e.name, e.value)} />
               </div>
-              <h2>Add &apos{formRenderProps.valueGetter('Member.FirstName')} {formRenderProps.valueGetter('Member.LastName')}&apos to Committee</h2>
+              <h2>Add '{formRenderProps.valueGetter('Member.FirstName')} {formRenderProps.valueGetter('Member.LastName')}' to Committee</h2>
               {
                 this.state.activeCommittees.length > 0 &&
                 <FieldArray
