@@ -51,18 +51,25 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
 
   public onExecute(event: IListViewCommandSetExecuteEventParameters): void {
     switch (event.itemId) {
-      case MyCommandSets.MemberDetails:
+      case MyCommandSets.MemberDetails: {
         const selectedRow: RowAccessor = event.selectedRows[0];
-        GetMemberIdFromSelectedRow(selectedRow).then(value => {
-          const memberDetailPanel: React.ReactComponentElement<any> = React.createElement(CommitteeMemberDashboardPanel, { context: this.context, memberId: value });
-          const panelDiv = document.createElement('div');
-          ReactDOM.render(memberDetailPanel, panelDiv);
-        });
+        GetMemberIdFromSelectedRow(selectedRow)
+          .then(value => {
+            const memberDetailPanel: React.ReactComponentElement<any> = React.createElement(CommitteeMemberDashboardPanel, { context: this.context, memberId: value });
+            const panelDiv = document.createElement('div');
+            ReactDOM.render(memberDetailPanel, panelDiv);
+          })
+          .catch(reason => {
+            console.error('Failed to Get Member ID from Selected Row');
+            console.error(reason);
+          });
         break;
-      case MyCommandSets.AddMember:
+      }
+      case MyCommandSets.AddMember: {
         const addMemberDialog: AddMemberDialogBase = new AddMemberDialogBase();
         addMemberDialog.show();
         break;
+      }
       default:
         throw new Error('Unknown command');
     }
@@ -70,10 +77,6 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
 
   private _onListViewStateChanged = (args: ListViewStateChangedEventArgs): void => {
     Log.info(LOG_SOURCE, 'List view state changed');
-
-    console.log('member details ListViewStateChange...');
-    console.log(args);
-    debugger;
 
     const compareMemberDetailsCommand: Command = this.tryGetCommand(MyCommandSets.MemberDetails)
 

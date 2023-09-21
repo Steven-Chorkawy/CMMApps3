@@ -323,7 +323,6 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
         StartDate: committee.StartDate,
         MemberLookupId:memberId
     });
-    debugger;
 
     // Step 3: Upload Attachments. 
     if (committee.Files) {
@@ -381,7 +380,7 @@ export const RenewCommitteeMember = async (memberId: number, committeeMemberProp
 
     // If we have anything other than 1 result, something went wrong.
     if (committeeMemberDocumentSet.length !== 1) {
-        throw "Something went wrong while querying Committee Member Document Set...";
+        throw new Error("Something went wrong while querying Committee Member Document Set...");
     }
 
     committeeMemberDocumentSet = committeeMemberDocumentSet[0];
@@ -390,7 +389,7 @@ export const RenewCommitteeMember = async (memberId: number, committeeMemberProp
     committeeMemberDocumentSet.Title = documentSetTitle.FileLeafRef;
 
     // * Step 2: Update the Doc Sets Status, Position, Start Date, and End Date.
-    const committeeMemberDocumentSet_UpdateResult = await committeeLibrary.items.getById(committeeMemberDocumentSet.ID).update({
+    await committeeLibrary.items.getById(committeeMemberDocumentSet.ID).update({
         OData__Status: committeeMemberProperties._Status,
         Position: committeeMemberProperties.Position,
         StartDate: committeeMemberProperties.StartDate,
