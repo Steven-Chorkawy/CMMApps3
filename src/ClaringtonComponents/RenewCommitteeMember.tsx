@@ -32,7 +32,12 @@ export class RenewCommitteeMember extends React.Component<IRenewCommitteeMemberP
         };
 
         if (this.props.memberId) {
-            GetMember(this.props.memberId).then(member => this.setState({ selectedMember: member }));
+            GetMember(this.props.memberId)
+                .then(member => this.setState({ selectedMember: member }))
+                .catch(reason => { 
+                    console.error('Failed to Get Member!');
+                    console.error(reason);
+                });
         }
     }
 

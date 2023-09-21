@@ -1,7 +1,5 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import { Panel, PanelType } from 'office-ui-fabric-react';
-// import { BaseDialog } from '@microsoft/sp-dialog';
 import { CommitteeMemberDashboard } from './CommitteeMemberDashboard';
 
 export class CommitteeMemberDashboardPanel extends React.Component<any, any> {

@@ -249,8 +249,8 @@ export const CreateCommitteeMemberHistoryItem = async (committeeMemberHistoryIte
     const sp = getSP();
     await sp.web.lists.getByTitle(MyLists.CommitteeMemberHistory).items.add({ ...committeeMemberHistoryItem });
 
-    // ? Why did I have this? 
-    //const committeeMemberContactInfoRetention = await CalculateMemberInfoRetention(committeeMemberHistoryItem.SPFX_CommitteeMemberDisplayNameId);
+    // ? Why did I have this?
+    // const committeeMemberContactInfoRetention = await CalculateMemberInfoRetention(committeeMemberHistoryItem.SPFX_CommitteeMemberDisplayNameId);
 
     // ? What does this do?
     // await sp.web.lists.getByTitle(MyLists.Members).items.getById(committeeMemberHistoryItem.SPFX_CommitteeMemberDisplayNameId).update({
@@ -314,6 +314,7 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
     // Step 1: Create the document set.
     const docSet = await (await CreateDocumentSet({ LibraryTitle: committee.CommitteeName, Title: member.Title })).item();
 
+    debugger; // TODO: This is not saving when StartDate is not set.
     // Step 2: Update Metadata.
     await sp.web.lists.getByTitle(committee.CommitteeName).items.getById(docSet.ID).update({
         Position: committee.Position,
@@ -322,6 +323,7 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
         StartDate: committee.StartDate,
         MemberLookupId:memberId
     });
+    debugger;
 
     // Step 3: Upload Attachments. 
     if (committee.Files) {
@@ -417,6 +419,9 @@ export const RenewCommitteeMember = async (memberId: number, committeeMemberProp
         StartDate: new Date(committeeMemberProperties.StartDate),
         MemberID: memberId,
         MemberLookupId: memberId
+    }).catch(reason => {
+        console.error('Failed to Create Committee Member History Item!');
+        console.error(reason);
     });
 
     // * Step 5: ... TBD Update something else?...

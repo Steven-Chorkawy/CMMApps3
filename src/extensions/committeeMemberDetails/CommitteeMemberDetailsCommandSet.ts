@@ -8,7 +8,6 @@ import {
 } from '@microsoft/sp-listview-extensibility';
 import { MyCommandSets } from '../../HelperMethods/MyCommandSets';
 import { GetMemberIdFromSelectedRow, getSP } from '../../HelperMethods/MyHelperMethods';
-import { MyLists } from '../../HelperMethods/MyLists';
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
 import { CommitteeMemberDashboardPanel } from '../../ClaringtonComponents/CommitteeMemberDashboardPanel';
@@ -51,9 +50,6 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
   }
 
   public onExecute(event: IListViewCommandSetExecuteEventParameters): void {
-    console.log('member details onExecute event...');
-    console.log(event);
-    debugger;
     switch (event.itemId) {
       case MyCommandSets.MemberDetails:
         const selectedRow: RowAccessor = event.selectedRows[0];
