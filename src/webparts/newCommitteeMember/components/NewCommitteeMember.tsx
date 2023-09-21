@@ -96,7 +96,7 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
                 <Field name={'Member.LastName'} label={'Last Name'} required={true} component={TextField} />
 
                 <Field name={'Member.EMail'} label={'Email'} validator={emailValidator} component={EmailInput} />
-                <Field name={'Member.Email2'} label={'Email 2'} validator={emailValidator} component={EmailInput} />
+                {/* <Field name={'Member.Email2'} label={'Email 2'} validator={emailValidator} component={EmailInput} /> */}
 
                 <Field name={'Member.CellPhone1'} label={'Cell Phone'} component={PhoneInput} onChange={e => formRenderProps.onChange(e.name, e.value)} />
                 <Field name={'Member.WorkPhone'} label={'Work Phone'} component={PhoneInput} onChange={e => formRenderProps.onChange(e.name, e.value)} />

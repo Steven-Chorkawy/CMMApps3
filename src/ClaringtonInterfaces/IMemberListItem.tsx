@@ -9,7 +9,7 @@ export default interface IMemberListItem {
     // Salutation?: string;
 
     EMail?: string;
-    Email2?: string;
+    // Email2?: string;
     CellPhone1?: string;
     WorkPhone?: string;     // Display name Buesiness Phone.
     HomePhone?: string;
