@@ -11,7 +11,7 @@ export default interface IMemberListItem {
     EMail?: string;
     // Email2?: string;
     CellPhone1?: string;
-    WorkPhone?: string;     // Display name Buesiness Phone.
+    // WorkPhone?: string;     // Display name Buesiness Phone.
     HomePhone?: string;
 
     WorkAddress?: string;   // Display name Address.
