@@ -57,8 +57,6 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
         GetMemberIdFromSelectedRow(selectedRow)
           .then(value => {
             const memberDetailPanel: React.ReactComponentElement<any> = React.createElement(CommitteeMemberDashboardPanel, { context: this.context, memberId: value });
-            //const panelDiv = document.createElement('div');
-            alert('TEST:  Using private attribute instead of variable.  Does this still work?');
             ReactDOM.render(memberDetailPanel, this.panelDiv);
           })
           .catch(reason => {
