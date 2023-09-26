@@ -6,6 +6,7 @@ import { emailValidator } from '../../../HelperMethods/Validators';
 import { CreateNewCommitteeMember, CreateNewMember, FormatDocumentSetPath, GetListOfActiveCommittees } from '../../../HelperMethods/MyHelperMethods';
 import { EmailInput, PhoneInput, PostalCodeInput } from '../../../ClaringtonComponents/MyFormComponents';
 import { NewCommitteeMemberFormComponent } from '../../../ClaringtonComponents/NewCommitteeMemberFormComponent';
+import PackageSolutionVersion from '../../../ClaringtonComponents/PackageSolutionVersion';
 
 export enum NewMemberFormSaveStatus {
   NewForm = -1,
@@ -170,6 +171,7 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
             </FormElement>
           )}
         />
+        <PackageSolutionVersion />
       </div>
     );
   }
