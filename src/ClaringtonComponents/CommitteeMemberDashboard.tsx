@@ -5,6 +5,7 @@ import IMemberListItem from '../ClaringtonInterfaces/IMemberListItem';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { GetMember, GetMembers, OnFormatDate } from '../HelperMethods/MyHelperMethods';
 import { CommitteeMemberContactDetails, CommitteeMemberTermHistory } from './MemberDetailsComponent';
+import PackageSolutionVersion from './PackageSolutionVersion';
 
 
 export interface ICommitteeMemberDashboardProps {
@@ -116,6 +117,7 @@ export class CommitteeMemberDashboard extends React.Component<ICommitteeMemberDa
                         link: LINK_EXAMPLE,
                     }]} />
             }
+            <PackageSolutionVersion />
         </div>;
     }
 }

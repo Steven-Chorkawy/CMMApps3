@@ -7,6 +7,7 @@ import { MyShimmer } from './MyShimmer';
 import { Dashboard, WidgetSize } from '@pnp/spfx-controls-react/lib/Dashboard';
 import { CommitteeMemberContactDetails, CommitteeMemberTermHistory } from './MemberDetailsComponent';
 import { RenewMemberComponent } from './RenewMemberComponent';
+import PackageSolutionVersion from './PackageSolutionVersion';
 
 //#region Interfaces.  State and Props.
 export interface IRenewCommitteeMemberProps {
@@ -34,7 +35,7 @@ export class RenewCommitteeMember extends React.Component<IRenewCommitteeMemberP
         if (this.props.memberId) {
             GetMember(this.props.memberId)
                 .then(member => this.setState({ selectedMember: member }))
-                .catch(reason => { 
+                .catch(reason => {
                     console.error('Failed to Get Member!');
                     console.error(reason);
                 });
@@ -99,6 +100,7 @@ export class RenewCommitteeMemberPanel extends React.Component<IRenewCommitteeMe
             onDismiss={() => this.setState({ isOpen: false })}
         >
             <RenewCommitteeMember {...this.props} />
+            <PackageSolutionVersion />
         </Panel>;
     }
 }
