@@ -6,7 +6,6 @@ import {
   ListViewStateChangedEventArgs,
   RowAccessor
 } from '@microsoft/sp-listview-extensibility';
-import { Dialog } from '@microsoft/sp-dialog';
 import { MyCommandSets } from '../../HelperMethods/MyCommandSets';
 import { GetMemberIdFromSelectedRow, getSP } from '../../HelperMethods/MyHelperMethods';
 import * as React from 'react';
@@ -43,19 +42,25 @@ export default class RenewCommitteeMemberCommandSet extends BaseListViewCommandS
 
   public onExecute(event: IListViewCommandSetExecuteEventParameters): void {
     switch (event.itemId) {
-      case MyCommandSets.RenewCommitteeMember:
+      case MyCommandSets.RenewCommitteeMember: {
         console.log('onExecute...');
         console.log(event);
         const selectedRow: RowAccessor = event.selectedRows[0];
-        GetMemberIdFromSelectedRow(selectedRow).then(value => {
-          const memberDetailPanel: React.ReactComponentElement<any> = React.createElement(RenewCommitteeMemberPanel, {
-            context: this.context,
-            memberId: value
+        GetMemberIdFromSelectedRow(selectedRow)
+          .then(value => {
+            const memberDetailPanel: React.ReactComponentElement<any> = React.createElement(RenewCommitteeMemberPanel, {
+              context: this.context,
+              memberId: value
+            });
+            const panelDiv = document.createElement('div');
+            ReactDOM.render(memberDetailPanel, panelDiv);
+          })
+          .catch(reason => {
+            console.error('Failed to get member ID!');
+            console.error(reason);
           });
-          const panelDiv = document.createElement('div');
-          ReactDOM.render(memberDetailPanel, panelDiv);
-        });
         break;
+      }
       default:
         throw new Error('Unknown command');
     }

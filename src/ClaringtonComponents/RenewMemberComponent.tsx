@@ -1,7 +1,7 @@
 import { DefaultButton, IComboBoxOption, MessageBar, MessageBarType, PrimaryButton, ProgressIndicator } from '@fluentui/react';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import * as React from 'react';
-import { CONSOLE_LOG_ERROR, CalculateTermEndDate, GetChoiceColumn, GetCommitteeByName, GetListOfActiveCommittees, OnFormatDate, RenewCommitteeMember, getSP } from '../HelperMethods/MyHelperMethods';
+import { CONSOLE_LOG_ERROR, CalculateTermEndDate, GetChoiceColumn, GetCommitteeByName, GetListOfActiveCommittees, OnFormatDate, RenewCommitteeMember } from '../HelperMethods/MyHelperMethods';
 import { MyShimmer } from './MyShimmer';
 import { Field, Form, FormElement, FormRenderProps } from '@progress/kendo-react-form';
 import { MyComboBox, MyDatePicker } from './MyFormComponents';
@@ -34,13 +34,18 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
             formStatus: CMMFormStatus.NewForm
         };
 
-        GetListOfActiveCommittees().then(committees => {
-            let committeeMapHolder: IComboBoxOption[] = [];
-            committees.map((committee: any) => {
-                committeeMapHolder.push({ key: committee.Title, text: committee.Title });
+        GetListOfActiveCommittees()
+            .then(committees => {
+                const committeeMapHolder: IComboBoxOption[] = [];
+                committees.map((committee: any) => {
+                    committeeMapHolder.push({ key: committee.Title, text: committee.Title });
+                });
+                this.setState({ activeCommittees: committeeMapHolder });
+            })
+            .catch(reason => {
+                console.error('Failed to Get List of Active Committees');
+                console.error(reason);
             });
-            this.setState({ activeCommittees: committeeMapHolder });
-        });
     }
 
     private _onSubmit = async (values: any): Promise<void> => {

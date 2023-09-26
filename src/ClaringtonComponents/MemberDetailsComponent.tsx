@@ -162,10 +162,10 @@ export class CommitteeMemberContactDetails extends React.Component<ICommitteeMem
             <Stack horizontal={true} wrap={true}>
                 <Stack.Item grow={6}>
                     {this._detailDisplay('EMail', 'Email')}
-                    {this._detailDisplay('Email2', 'Email')}
+                    {/* {this._detailDisplay('Email2', 'Email')} */}
                     {this._detailDisplay('CellPhone1', 'Cell Phone')}
                     {this._detailDisplay('HomePhone', 'Home Phone')}
-                    {this._detailDisplay('WorkPhone', 'Work Phone')}
+                    {/* {this._detailDisplay('WorkPhone', 'Work Phone')} */}
                 </Stack.Item>
                 <Stack.Item grow={6}>
                     {this._detailDisplay('WorkAddress', 'Address')}
