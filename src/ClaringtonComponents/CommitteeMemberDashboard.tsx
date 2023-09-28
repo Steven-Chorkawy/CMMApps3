@@ -6,12 +6,14 @@ import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { GetMember, GetMembers, OnFormatDate } from '../HelperMethods/MyHelperMethods';
 import { CommitteeMemberContactDetails, CommitteeMemberTermHistory } from './MemberDetailsComponent';
 import PackageSolutionVersion from './PackageSolutionVersion';
+import { ListViewCommandSetContext } from '@microsoft/sp-listview-extensibility';
 
 
 export interface ICommitteeMemberDashboardProps {
     description?: string;
     memberId?: number;
-    context: WebPartContext;
+    context: WebPartContext | ListViewCommandSetContext;
+    selectMemberCallback?: Function;
 }
 
 export interface ICommitteeMemberDashboardState {
@@ -74,6 +76,7 @@ export class CommitteeMemberDashboard extends React.Component<ICommitteeMemberDa
                         GetMember(Number(option.key))
                             .then(member => {
                                 this.setState({ selectedMember: member });
+                                this.props.selectMemberCallback && this.props.selectMemberCallback(member);
                             }).catch(reason => {
                                 console.error('Failed to get member!');
                                 console.error(reason);
@@ -103,7 +106,7 @@ export class CommitteeMemberDashboard extends React.Component<ICommitteeMemberDa
                     },
                     {
                         title: "Committee History",
-                        size: WidgetSize.Single,
+                        size: WidgetSize.Triple,
                         body: [{
                             id: 'id',
                             title: 'Committee History',
@@ -111,11 +114,12 @@ export class CommitteeMemberDashboard extends React.Component<ICommitteeMemberDa
                         }],
                         link: LINK_MEMBER_HISTORY,
                     },
-                    {
-                        title: "Card 3",
-                        size: WidgetSize.Double,
-                        link: LINK_EXAMPLE,
-                    }]} />
+                    // {
+                    //     title: "Card 3",
+                    //     size: WidgetSize.Double,
+                    //     link: LINK_EXAMPLE,
+                    // }
+                    ]} />
             }
             <PackageSolutionVersion />
         </div>;
