@@ -11,7 +11,8 @@ import { GetMemberIdFromSelectedRow, getSP } from '../../HelperMethods/MyHelperM
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
 import { CommitteeMemberDashboardPanel } from '../../ClaringtonComponents/CommitteeMemberDashboardPanel';
-import { AddMemberDialogBase } from '../../ClaringtonComponents/AddMemberDialog';
+import { AddMemberDialogBase, AddMemberPanel } from '../../ClaringtonComponents/AddMemberDialog';
+import { assign } from '@fluentui/react';
 
 /**
  * If your command set uses the ClientSideComponentProperties JSON input,
@@ -66,8 +67,11 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
         break;
       }
       case MyCommandSets.AddMember: {
-        const addMemberDialog: AddMemberDialogBase = new AddMemberDialogBase();
-        addMemberDialog.show();
+        // const addMemberDialog: AddMemberDialogBase = new AddMemberDialogBase();
+        // addMemberDialog.show();
+
+        const addMemberPanelElement: React.ReactElement<any> = React.createElement(AddMemberPanel, assign({ isOpen: true }))
+        ReactDOM.render(addMemberPanelElement, this.panelPlaceHolder);
         break;
       }
       default:

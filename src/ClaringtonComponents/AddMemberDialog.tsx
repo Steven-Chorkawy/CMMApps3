@@ -1,8 +1,9 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { DefaultButton, DialogFooter, PrimaryButton } from '@fluentui/react';
+import { DefaultButton, DialogFooter, Panel, PanelType, PrimaryButton } from '@fluentui/react';
 import { BaseDialog, IDialogConfiguration } from '@microsoft/sp-dialog';
 import { DialogContent } from 'office-ui-fabric-react';
+import { CommitteeMemberDashboard } from './CommitteeMemberDashboard';
 
 export interface IAddMemberDialogProps {
     hideDialog?: boolean;
@@ -16,6 +17,8 @@ export interface IIAddMemberDialogState {
 export class AddMemberDialogContent extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
+        console.log(this.props.context);
+        debugger;
     }
 
     public render(): React.ReactElement<any, any> {
@@ -25,7 +28,8 @@ export class AddMemberDialogContent extends React.Component<any, any> {
             showCloseButton={true}
         >
             <div>
-                <h4>Add Member Form will go here...</h4>
+                <h3>TESTING...</h3>
+                <CommitteeMemberDashboard context={this.props.context} />
             </div>
             <DialogFooter>
                 <PrimaryButton text="Send" />
@@ -50,5 +54,24 @@ export class AddMemberDialogBase extends BaseDialog {
         super.onAfterClose();
         // Clean up the element for the next dialog
         ReactDOM.unmountComponentAtNode(this.domElement);
+    }
+}
+
+
+export class AddMemberPanel extends React.Component<any, any> {
+    /**
+     *
+     */
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            isOpen: this.props.isOpen ? this.props.isOpen : false
+        }
+    }
+
+    public render(): React.ReactElement<any, any> {
+        return <Panel isLightDismiss={false} isOpen={this.state.isOpen} type={PanelType.large} onDismiss={() => this.setState({ isOpen: false })}>
+            <h3>Add member Panel</h3>
+        </Panel>;
     }
 }
