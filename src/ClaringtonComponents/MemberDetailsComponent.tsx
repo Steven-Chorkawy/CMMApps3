@@ -5,12 +5,13 @@ import IMemberListItem from '../ClaringtonInterfaces/IMemberListItem';
 import { ICommitteeMemberHistoryListItem } from '../ClaringtonInterfaces/INewCommitteeMemberHistoryListItem';
 import { CalculateTotalYearsServed, GetMembersTermHistory } from '../HelperMethods/MyHelperMethods';
 import { MyShimmer } from './MyShimmer';
+import { ListViewCommandSetContext } from '@microsoft/sp-listview-extensibility';
 
 //#region 
 export interface IMemberDetailsComponentProps {
     memberId: number;
     title?: string;      // Title of the component if any are required.
-    context: WebPartContext;
+    context: WebPartContext | ListViewCommandSetContext;
 }
 
 export interface IMemberDetailsComponentState {
@@ -20,7 +21,7 @@ export interface IMemberDetailsComponentState {
 }
 
 export interface ICommitteeMemberBreadCrumbProps {
-    context: WebPartContext;
+    context: WebPartContext | ListViewCommandSetContext;
     committeeTerm: ICommitteeMemberHistoryListItem;
     allTerms?: ICommitteeMemberHistoryListItem[];     // Used to preview past committees.
 }
@@ -31,7 +32,7 @@ export interface ICommitteeMemberContactDetails {
 
 export interface ICommitteeMemberTermHistoryProps {
     memberID: number;
-    context: WebPartContext;
+    context: WebPartContext | ListViewCommandSetContext;
 }
 
 export interface ICommitteeMemberTermHistoryState {
