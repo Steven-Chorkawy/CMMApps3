@@ -314,15 +314,45 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
     // Step 1: Create the document set.
     const docSet = await (await CreateDocumentSet({ LibraryTitle: committee.CommitteeName, Title: member.Title })).item();
 
+    // Create an object of the new doc sets metadata.  Additional properties will be added to this object if needed.
+    let newMemberMetadata: any = {
+        Position: committee?.Position,
+        OData__Status: committee?._Status,
+        MemberLookupId: memberId
+    };
+
+    // Create an object for the MemberHistory list item.  OData__EndDate and StartDate will be added later if needed.
+    let committeeMemberHistoryItemMetadata:any = {
+        CommitteeName: committee.CommitteeName,
+        Title: FormatMemberTitle(member.FirstName, member.LastName),
+        MemberLookupId: memberId,
+        MemberID: memberId
+    };
+
+    debugger;
+    // We only want to update the _EndDate filed if an EndDate is provided. 
+    if (committee._EndDate) {
+        newMemberMetadata.OData__EndDate = committee._EndDate;
+        committeeMemberHistoryItemMetadata.OData__EndDate = committee._EndDate;
+    }
+
+    // We only want to update the StartDate field if a StartDate is provided.
+    if (committee.StartDate) {
+        newMemberMetadata.StartDate = committee.StartDate;
+        committeeMemberHistoryItemMetadata.StartDate = committee.StartDate;
+    }
+
     debugger; // TODO: This is not saving when StartDate is not set.
+
     // Step 2: Update Metadata.
-    await sp.web.lists.getByTitle(committee.CommitteeName).items.getById(docSet.ID).update({
-        Position: committee.Position,
-        OData__Status: committee._Status,
-        OData__EndDate: committee._EndDate,
-        StartDate: committee.StartDate,
-        MemberLookupId:memberId
-    });
+    await sp.web.lists.getByTitle(committee.CommitteeName).items.getById(docSet.ID).update(newMemberMetadata)
+        .catch(reason => {
+            console.error(`Failed to update Doc Set ID: ${docSet.ID}.  Will delete the document set.`);
+            console.error(reason);
+            // Automatically delete the document set or else we will be left with an empty folder with no documents and no metadata.
+            sp.web.lists.getByTitle(committee.CommitteeName).items.getById(docSet.ID).delete();
+            throw new Error(reason);
+        });
 
     // Step 3: Upload Attachments. 
     if (committee.Files) {
@@ -340,14 +370,7 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
     // TODO: How do I manage this relationship? 
 
     // Step 5: Create a committee member history list item record.
-    await CreateCommitteeMemberHistoryItem({
-        CommitteeName: committee.CommitteeName,
-        Title: FormatMemberTitle(member.FirstName, member.LastName),
-        OData__EndDate: committee._EndDate,
-        StartDate: committee.StartDate,
-        MemberLookupId: memberId,
-        MemberID: memberId
-    });
+    await CreateCommitteeMemberHistoryItem(committeeMemberHistoryItemMetadata);
 };
 
 /**
