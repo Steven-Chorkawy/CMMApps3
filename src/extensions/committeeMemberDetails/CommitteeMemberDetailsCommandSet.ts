@@ -11,7 +11,7 @@ import { GetMemberIdFromSelectedRow, getSP } from '../../HelperMethods/MyHelperM
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
 import { CommitteeMemberDashboardPanel } from '../../ClaringtonComponents/CommitteeMemberDashboardPanel';
-import { AddMemberDialogBase, AddMemberPanel } from '../../ClaringtonComponents/AddMemberDialog';
+import { AddMemberPanel } from '../../ClaringtonComponents/AddMemberDialog';
 import { assign } from '@fluentui/react';
 
 /**
@@ -29,15 +29,10 @@ const LOG_SOURCE: string = 'CommitteeMemberDetailsCommandSet';
 
 export default class CommitteeMemberDetailsCommandSet extends BaseListViewCommandSet<ICommitteeMemberDetailsCommandSetProperties> {
 
-  private panelPlaceHolder: HTMLDivElement = null;
-  private panelDiv = document.createElement('div');
-
   public onInit(): Promise<void> {
     Log.info(LOG_SOURCE, 'Initialized CommitteeMemberDetailsCommandSet');
 
     getSP(this.context);
-
-    this.panelPlaceHolder = document.body.appendChild(document.createElement("div"));
 
     // initial state of the command's visibility
     const compareMemberDetailsCommand: Command = this.tryGetCommand(MyCommandSets.MemberDetails);
@@ -58,7 +53,7 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
         GetMemberIdFromSelectedRow(selectedRow)
           .then(value => {
             const memberDetailPanel: React.ReactComponentElement<any> = React.createElement(CommitteeMemberDashboardPanel, { context: this.context, memberId: value });
-            ReactDOM.render(memberDetailPanel, this.panelDiv);
+            ReactDOM.render(memberDetailPanel, document.createElement('div'));
           })
           .catch(reason => {
             console.error('Failed to Get Member ID from Selected Row');
@@ -67,11 +62,8 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
         break;
       }
       case MyCommandSets.AddMember: {
-        // const addMemberDialog: AddMemberDialogBase = new AddMemberDialogBase();
-        // addMemberDialog.show();
-
-        const addMemberPanelElement: React.ReactElement<any> = React.createElement(AddMemberPanel, assign({ isOpen: true }))
-        ReactDOM.render(addMemberPanelElement, this.panelPlaceHolder);
+        const addMemberPanelElement: React.ReactComponentElement<any> = React.createElement(AddMemberPanel, { context: this.context })
+        ReactDOM.render(addMemberPanelElement, document.createElement('div'));
         break;
       }
       default:
@@ -94,6 +86,5 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
   }
 
   protected onDispose(): void {
-    ReactDOM.unmountComponentAtNode(this.panelDiv);
   }
 }
