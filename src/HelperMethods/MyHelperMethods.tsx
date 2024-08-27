@@ -185,7 +185,7 @@ export const GetCommitteeByName = async (committeeName: string): Promise<ICommit
 
 export const GetListOfActiveCommittees = async (): Promise<any> => {
     const sp = getSP();
-    return await sp.web.lists.getByTitle(MyLists.CommitteeDocuments).items.filter(`OData__Status eq 'Active' and ContentTypeId eq '${COMMITTEE_FILE_CONTENT_TYPE_ID}'`)();
+    return await sp.web.lists.getByTitle(MyLists.CommitteeDocuments).items.filter(`OData__Status eq 'Active' and ContentTypeId eq '${COMMITTEE_FILE_CONTENT_TYPE_ID}'`).orderBy('Title')();
 };
 
 export const GetLibraryContentTypes = async (libraryTitle: string): Promise<string> => {
@@ -198,6 +198,15 @@ export const GetLibraryContentTypes = async (libraryTitle: string): Promise<stri
 export const GetMembers = async (): Promise<IMemberListItem[]> => await getSP().web.lists.getByTitle(MyLists.Members).items();
 
 export const GetMember = async (id: number): Promise<any> => await getSP().web.lists.getByTitle(MyLists.Members).items.getById(id)();
+
+export const GetMemberByName = async (firstName: string, lastName: string): Promise<IMemberListItem> => {
+    const FULL_NAME = `${lastName}, ${firstName}`;
+    const member: IMemberListItem = await getSP().web.lists.getByTitle(MyLists.Members).items.filter(`Title eq ${FULL_NAME}`)();
+    console.log('GetMemberByName:');
+    console.log(member);
+    debugger;
+    return member;
+}
 
 /**
  * Get a members term history.
@@ -322,7 +331,7 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
     };
 
     // Create an object for the MemberHistory list item.  OData__EndDate and StartDate will be added later if needed.
-    let committeeMemberHistoryItemMetadata:any = {
+    let committeeMemberHistoryItemMetadata: any = {
         CommitteeName: committee.CommitteeName,
         Title: FormatMemberTitle(member.FirstName, member.LastName),
         MemberLookupId: memberId,
