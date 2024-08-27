@@ -105,9 +105,9 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
           onSubmit={this._onSubmit}
           render={(formRenderProps: FormRenderProps) => (
             <FormElement>
-              <h2>Add New Member</h2>
+              <h2>Add New Member (testing)</h2>
               <div style={{ padding: '10px', marginBottom: '10px', boxShadow: reactTheme.effects.elevation16 }}>
-                <Field name={'Member.FirstName'} label={'First Name'} required={true} component={TextField} />
+                <Field name={'Member.FirstName'} label={'First Name'} required={true} component={TextField} onBlur={() => { alert('First Name Blur!'); }} onChange={() => alert('onChanges')} />
                 <Field name={'Member.LastName'} label={'Last Name'} required={true} component={TextField} />
 
                 <Field name={'Member.EMail'} label={'Email'} validator={emailValidator} component={EmailInput} />
