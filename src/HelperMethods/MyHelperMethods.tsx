@@ -199,13 +199,19 @@ export const GetMembers = async (): Promise<IMemberListItem[]> => await getSP().
 
 export const GetMember = async (id: number): Promise<any> => await getSP().web.lists.getByTitle(MyLists.Members).items.getById(id)();
 
-export const GetMemberByName = async (firstName: string, lastName: string): Promise<IMemberListItem> => {
-    const FULL_NAME = `${lastName}, ${firstName}`;
-    const member: IMemberListItem = await getSP().web.lists.getByTitle(MyLists.Members).items.filter(`Title eq ${FULL_NAME}`)();
-    console.log('GetMemberByName:');
-    console.log(member);
-    debugger;
-    return member;
+/**
+ * Query the Members list by Title and return an array of members found.
+ * @param firstName First name of the member as a string.
+ * @param lastName Last name of the member as a string.
+ * @returns An Array of IMemberListItem.
+ */
+export const GetMembersByName = async (firstName: string, lastName: string): Promise<IMemberListItem[]> => {
+    // If first or last name is not provided then we can skip the list query.
+    if(firstName === undefined || lastName === undefined) {
+        console.log('First or Last Name is undefined');
+        return [];
+    }
+    return await getSP().web.lists.getByTitle(MyLists.Members).items.filter(`Title eq '${lastName}, ${firstName}'`)();
 }
 
 /**
