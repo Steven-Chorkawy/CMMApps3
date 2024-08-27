@@ -185,7 +185,7 @@ export const GetCommitteeByName = async (committeeName: string): Promise<ICommit
 
 export const GetListOfActiveCommittees = async (): Promise<any> => {
     const sp = getSP();
-    return await sp.web.lists.getByTitle(MyLists.CommitteeDocuments).items.filter(`OData__Status eq 'Active' and ContentTypeId eq '${COMMITTEE_FILE_CONTENT_TYPE_ID}'`)();
+    return await sp.web.lists.getByTitle(MyLists.CommitteeDocuments).items.filter(`OData__Status eq 'Active' and ContentTypeId eq '${COMMITTEE_FILE_CONTENT_TYPE_ID}'`).orderBy('Title')();
 };
 
 export const GetLibraryContentTypes = async (libraryTitle: string): Promise<string> => {
@@ -198,6 +198,21 @@ export const GetLibraryContentTypes = async (libraryTitle: string): Promise<stri
 export const GetMembers = async (): Promise<IMemberListItem[]> => await getSP().web.lists.getByTitle(MyLists.Members).items();
 
 export const GetMember = async (id: number): Promise<any> => await getSP().web.lists.getByTitle(MyLists.Members).items.getById(id)();
+
+/**
+ * Query the Members list by Title and return an array of members found.
+ * @param firstName First name of the member as a string.
+ * @param lastName Last name of the member as a string.
+ * @returns An Array of IMemberListItem.
+ */
+export const GetMembersByName = async (firstName: string, lastName: string): Promise<IMemberListItem[]> => {
+    // If first or last name is not provided then we can skip the list query.
+    if(firstName === undefined || lastName === undefined) {
+        console.log('First or Last Name is undefined');
+        return [];
+    }
+    return await getSP().web.lists.getByTitle(MyLists.Members).items.filter(`Title eq '${lastName}, ${firstName}'`)();
+}
 
 /**
  * Get a members term history.
@@ -322,7 +337,7 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
     };
 
     // Create an object for the MemberHistory list item.  OData__EndDate and StartDate will be added later if needed.
-    let committeeMemberHistoryItemMetadata:any = {
+    let committeeMemberHistoryItemMetadata: any = {
         CommitteeName: committee.CommitteeName,
         Title: FormatMemberTitle(member.FirstName, member.LastName),
         MemberLookupId: memberId,

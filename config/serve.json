@@ -7,7 +7,7 @@
     // Run 'gulp serve' to use this config.
     "default": {
       // ! This is the URL that will be launch on 'gulp serve'
-      "pageUrl": "https://claringtonnet.sharepoint.com/sites/CMM/AgriculturalAdvisory",
+      "pageUrl": "https://claringtonnet.sharepoint.com/sites/cmm/_layouts/workbench.aspx",
       "customActions": {
         "e0526677-c5a5-489a-b306-a04f306fb242": {
           "location": "ClientSideExtension.ListViewCommandSet",

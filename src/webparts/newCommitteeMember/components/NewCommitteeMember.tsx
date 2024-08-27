@@ -3,11 +3,12 @@ import { INewCommitteeMemberProps } from './INewCommitteeMemberProps';
 import { Field, FieldArray, Form, FormElement, FormRenderProps } from '@progress/kendo-react-form';
 import { DefaultButton, getTheme, Link, MessageBar, MessageBarType, PrimaryButton, ProgressIndicator, Separator, TextField } from '@fluentui/react';
 import { emailValidator } from '../../../HelperMethods/Validators';
-import { CreateNewCommitteeMember, CreateNewMember, FormatDocumentSetPath, GetListOfActiveCommittees } from '../../../HelperMethods/MyHelperMethods';
+import { CreateNewCommitteeMember, CreateNewMember, FormatDocumentSetPath, GetListOfActiveCommittees, GetMembersByName } from '../../../HelperMethods/MyHelperMethods';
 import { EmailInput, PhoneInput, PostalCodeInput } from '../../../ClaringtonComponents/MyFormComponents';
 import { NewCommitteeMemberFormComponent } from '../../../ClaringtonComponents/NewCommitteeMemberFormComponent';
 import PackageSolutionVersion from '../../../ClaringtonComponents/PackageSolutionVersion';
 import { MyShimmer } from '../../../ClaringtonComponents/MyShimmer';
+import { first } from 'lodash';
 
 export enum NewMemberFormSaveStatus {
   NewForm = -1,
@@ -17,12 +18,21 @@ export enum NewMemberFormSaveStatus {
   Error = 3
 }
 
+export enum DuplicateMemberNameStatus {
+  NoName = 0,
+  QueryingList = 1,
+  NoDuplicateFound = 2,
+  YesDuplicateFound = 3,
+  SomethingWentWrong = 4
+}
+
 export interface INewMemberFormState {
   activeCommittees: any[];
   failedToLoadActiveCommittees: boolean;  // True: Display error messages.  False: Hide error messages.
   // provinces: any[];
   saveStatus: NewMemberFormSaveStatus;
   linkToCommitteeDocSet: any[];
+  duplicateMemberNameStatus: DuplicateMemberNameStatus;
 }
 
 export default class NewCommitteeMember extends React.Component<INewCommitteeMemberProps, INewMemberFormState> {
@@ -35,7 +45,8 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
       failedToLoadActiveCommittees: false,  // ! Must be set to false or else error messages will be displayed by default.
       // provinces: [],
       saveStatus: NewMemberFormSaveStatus.NewForm,
-      linkToCommitteeDocSet: []
+      linkToCommitteeDocSet: [],
+      duplicateMemberNameStatus: DuplicateMemberNameStatus.NoName
     };
 
     GetListOfActiveCommittees()
@@ -95,6 +106,24 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
     }
   }
 
+  private _checkForDuplicateMembers = async (firstName: string, lastName: string): Promise<void> => {
+    if (firstName === undefined || lastName === undefined) {
+      this.setState({ duplicateMemberNameStatus: DuplicateMemberNameStatus.NoName });
+    }
+    else {
+      this.setState({ duplicateMemberNameStatus: DuplicateMemberNameStatus.QueryingList });
+      try {
+        let memberFound = await GetMembersByName(firstName, lastName);
+        memberFound.length > 0 ?
+          this.setState({ duplicateMemberNameStatus: DuplicateMemberNameStatus.YesDuplicateFound }) :
+          this.setState({ duplicateMemberNameStatus: DuplicateMemberNameStatus.NoDuplicateFound })
+      } catch (error) {
+        console.error(error);
+        this.setState({ duplicateMemberNameStatus: DuplicateMemberNameStatus.SomethingWentWrong });
+      }
+    }
+  }
+
   public render(): React.ReactElement<INewCommitteeMemberProps> {
 
     const reactTheme = getTheme();
@@ -105,10 +134,36 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
           onSubmit={this._onSubmit}
           render={(formRenderProps: FormRenderProps) => (
             <FormElement>
-              <h2>Add New Member</h2>
+              <h2>Add New Member (testing)</h2>
               <div style={{ padding: '10px', marginBottom: '10px', boxShadow: reactTheme.effects.elevation16 }}>
-                <Field name={'Member.FirstName'} label={'First Name'} required={true} component={TextField} />
-                <Field name={'Member.LastName'} label={'Last Name'} required={true} component={TextField} />
+                <Field name={'Member.FirstName'} label={'First Name'} required={true} component={TextField}
+                  onChange={() => this._checkForDuplicateMembers(formRenderProps.valueGetter('Member.FirstName'), formRenderProps.valueGetter('Member.LastName'))}
+                />
+                <Field name={'Member.LastName'} label={'Last Name'} required={true} component={TextField}
+                  onChange={() => this._checkForDuplicateMembers(formRenderProps.valueGetter('Member.FirstName'), formRenderProps.valueGetter('Member.LastName'))}
+                />
+                {
+                  this.state.duplicateMemberNameStatus === DuplicateMemberNameStatus.NoName &&
+                  <MessageBar>Enter First and Last Name to check for duplicate members.</MessageBar>
+                }
+                {
+                  this.state.duplicateMemberNameStatus === DuplicateMemberNameStatus.NoDuplicateFound &&
+                  <MessageBar messageBarType={MessageBarType.success}>No duplicate members found.</MessageBar>
+                }
+                {
+                  this.state.duplicateMemberNameStatus === DuplicateMemberNameStatus.YesDuplicateFound &&
+                  <MessageBar messageBarType={MessageBarType.error}><a target='_blank' href={`https://claringtonnet.sharepoint.com/sites/CMM/Lists/Members/AllItems.aspx?FilterField1=LinkTitle&FilterValue1=${formRenderProps.valueGetter('Member.LastName')}, ${formRenderProps.valueGetter('Member.FirstName')}`}>"{formRenderProps.valueGetter("Member.LastName")}, {formRenderProps.valueGetter('Member.FirstName')}"</a> is already an existing member.</MessageBar>
+                }
+                {
+                  this.state.duplicateMemberNameStatus === DuplicateMemberNameStatus.SomethingWentWrong &&
+                  <MessageBar messageBarType={MessageBarType.severeWarning}>SOMETHING WENT WRONG WHILE CHECKING FOR DUPLICATE MEMBERS!</MessageBar>
+                }
+                {
+                  this.state.duplicateMemberNameStatus === DuplicateMemberNameStatus.QueryingList &&
+                  <MessageBar>
+                    <ProgressIndicator label="Checking for duplicate members" description={`"${formRenderProps.valueGetter("Member.LastName")}, ${formRenderProps.valueGetter('Member.FirstName')}"`} />
+                  </MessageBar>
+                }
 
                 <Field name={'Member.EMail'} label={'Email'} validator={emailValidator} component={EmailInput} />
                 {/* <Field name={'Member.Email2'} label={'Email 2'} validator={emailValidator} component={EmailInput} /> */}
