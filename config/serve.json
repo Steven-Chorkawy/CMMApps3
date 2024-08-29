@@ -20,7 +20,7 @@
     },
     // Run 'gulp serve --config=renewCommitteeMember' to use this config.
     "renewCommitteeMember": {
-      "pageUrl": "https://claringtonnet.sharepoint.com/sites/CMM/DemoCommittee",
+      "pageUrl": "https://claringtonnet.sharepoint.com/sites/CMM/AccessibilityAdvisory",
       "customActions": {
         "e0526677-c5a5-489a-b306-a04f306fb242": {
           "location": "ClientSideExtension.ListViewCommandSet",
