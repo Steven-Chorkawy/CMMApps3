@@ -4,6 +4,7 @@ import "@pnp/sp/webs";
 import "@pnp/sp/sites";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
+import "@pnp/sp/items/get-all";
 import "@pnp/sp/fields";
 import "@pnp/sp/files";
 import "@pnp/sp/folders";
@@ -195,7 +196,23 @@ export const GetLibraryContentTypes = async (libraryTitle: string): Promise<stri
 
 };
 
-export const GetMembers = async (): Promise<IMemberListItem[]> => await getSP().web.lists.getByTitle(MyLists.Members).items();
+export const GetMembers = async (): Promise<IMemberListItem[]> => {
+    // Sort method from here: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+    let allMembers = await getSP().web.lists.getByTitle(MyLists.Members).items.getAll();
+    let allMembersSorted = allMembers.sort((a, b) => {
+        const nameA = a.Title.toUpperCase(); // ignore upper and lowercase
+        const nameB = b.Title.toUpperCase(); // ignore upper and lowercase
+        if (nameA < nameB) {
+            return -1;
+        }
+        if (nameA > nameB) {
+            return 1;
+        }
+        // names must be equal
+        return 0;
+    });
+    return allMembersSorted;
+}
 
 export const GetMember = async (id: number): Promise<any> => await getSP().web.lists.getByTitle(MyLists.Members).items.getById(id)();
 
@@ -207,7 +224,7 @@ export const GetMember = async (id: number): Promise<any> => await getSP().web.l
  */
 export const GetMembersByName = async (firstName: string, lastName: string): Promise<IMemberListItem[]> => {
     // If first or last name is not provided then we can skip the list query.
-    if(firstName === undefined || lastName === undefined) {
+    if (firstName === undefined || lastName === undefined) {
         console.log('First or Last Name is undefined');
         return [];
     }
