@@ -148,8 +148,8 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
     else {
       this.setState({ duplicateMemberNameStatus: DuplicateMemberNameStatus.QueryingList });
       try {
-        let memberFound = await GetMembersByName(firstName, lastName);
-        memberFound.length > 0 ?
+        const MEMBER_FOUND = await GetMembersByName(firstName, lastName);
+        MEMBER_FOUND.length > 0 ?
           this.setState({ duplicateMemberNameStatus: DuplicateMemberNameStatus.YesDuplicateFound }) :
           this.setState({ duplicateMemberNameStatus: DuplicateMemberNameStatus.NoDuplicateFound })
       } catch (error) {
