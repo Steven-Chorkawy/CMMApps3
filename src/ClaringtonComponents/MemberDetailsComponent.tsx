@@ -91,7 +91,7 @@ export class CommitteeMemberBreadCrumb extends React.Component<ICommitteeMemberB
     }
 }
 
-export class CommitteeMemberTermHistory extends React.Component<ICommitteeMemberTermHistoryProps, ICommitteeMemberTermHistoryState>{
+export class CommitteeMemberTermHistory extends React.Component<ICommitteeMemberTermHistoryProps, ICommitteeMemberTermHistoryState> {
     constructor(props: any) {
         super(props);
         this.state = {
@@ -163,15 +163,25 @@ export class CommitteeMemberContactDetails extends React.Component<ICommitteeMem
             <Stack horizontal={true} wrap={true}>
                 <Stack.Item grow={6}>
                     {this._detailDisplay('EMail', 'Email')}
-                    {/* {this._detailDisplay('Email2', 'Email')} */}
                     {this._detailDisplay('CellPhone1', 'Cell Phone')}
                     {this._detailDisplay('HomePhone', 'Home Phone')}
-                    {/* {this._detailDisplay('WorkPhone', 'Work Phone')} */}
                 </Stack.Item>
                 <Stack.Item grow={6}>
                     {this._detailDisplay('WorkAddress', 'Address')}
                     {this._detailDisplay('PostalCode', 'Postal Code')}
                     {this._detailDisplay('WorkCity', 'City')}
+                </Stack.Item>
+            </Stack>
+            <Stack horizontal={true} wrap={true} style={{ marginTop: '5px' }}>
+                <Stack.Item grow={6}>
+                    {this._detailDisplay('GenderChoice', 'Gender')}
+                    {this._detailDisplay('Age', 'Age')}
+                    {this._detailDisplay('Disability', 'Disability')}
+                </Stack.Item>
+                <Stack.Item grow={6}>
+                    {this._detailDisplay('IdentifyIndigenous', 'Identify as Indigenous')}
+                    {this._detailDisplay('EthnoCultural', 'Ethno-Cultural Identity')}
+                    {this._detailDisplay('RacialBackground', 'Racial Background')}
                 </Stack.Item>
             </Stack>
         </div>;
