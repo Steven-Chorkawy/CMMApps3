@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { INewCommitteeMemberProps } from './INewCommitteeMemberProps';
 import { Field, FieldArray, Form, FormElement, FormRenderProps } from '@progress/kendo-react-form';
-import { DefaultButton, Dropdown, getTheme, Link, MessageBar, MessageBarType, PrimaryButton, ProgressIndicator, Separator, TextField } from '@fluentui/react';
+import { DefaultButton, getTheme, Link, MessageBar, MessageBarType, PrimaryButton, ProgressIndicator, Separator, TextField } from '@fluentui/react';
 import { emailValidator } from '../../../HelperMethods/Validators';
 import { CreateNewCommitteeMember, CreateNewMember, FormatDocumentSetPath, GetChoiceColumn, GetListOfActiveCommittees, GetMembersByName } from '../../../HelperMethods/MyHelperMethods';
-import { EmailInput, PhoneInput, PostalCodeInput } from '../../../ClaringtonComponents/MyFormComponents';
+import { EmailInput, MyDropdown, PhoneInput, PostalCodeInput } from '../../../ClaringtonComponents/MyFormComponents';
 import { NewCommitteeMemberFormComponent } from '../../../ClaringtonComponents/NewCommitteeMemberFormComponent';
 import PackageSolutionVersion from '../../../ClaringtonComponents/PackageSolutionVersion';
 import { MyShimmer } from '../../../ClaringtonComponents/MyShimmer';
@@ -60,7 +60,6 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
       ethnoCulturalOptions: [],
       racialBackgroundOptions: []
     };
-
 
     Promise.all([
       GetChoiceColumn(MyLists.Members, 'Age'),
@@ -209,16 +208,25 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
                 <Field name={'Member.WorkCity'} label={'City'} component={TextField} />
                 <Field name={'Member.PostalCode'} label={'Postal Code'} component={PostalCodeInput} onChange={e => formRenderProps.onChange(e.name, e.value)} />
 
-                <Field name={'Member.Age'} label={'Age'} component={Dropdown} options={this.state.ageOptions.map((value: any) => { return { key: value, text: value }; })} />
-                <Field name={'Member.GenderChoice'} label={'Gender'} component={Dropdown} options={this.state.genderOptions.map((value: any) => { return { key: value, text: value }; })} />
-                <Field name={'Member.Disability'} label={'Do you identify as having a disability?'} component={Dropdown} options={this.state.disabilityOptions.map((value: any) => { return { key: value, text: value }; })} />
-                <Field name={'Member.IdentifyIndigenous'} label={'Do you identify yourself as an Indigenous person (First Nations, Metis, or Inuit)?'} component={Dropdown} options={this.state.identifyIndigenousOptions.map((value: any) => { return { key: value, text: value }; })} />
-                <Field name={'Member.EthnoCultural'} label={'Ethno-Cultural Identity'} component={Dropdown} options={this.state.ethnoCulturalOptions.map((value: any) => { return { key: value, text: value }; })} />
-                <Field name={'Member.RacialBackground'} label={'Racial Background'} component={Dropdown} options={this.state.racialBackgroundOptions.map((value: any) => { return { key: value, text: value }; })} />
-
-
+                <Field name={'Member.Age'} label={'Age'} component={MyDropdown}
+                  options={this.state.ageOptions.map((value: any) => { return { key: value, text: value }; })}
+                />
+                <Field name={'Member.GenderChoice'} label={'Gender'} component={MyDropdown}
+                  options={this.state.genderOptions.map((value: any) => { return { key: value, text: value }; })}
+                />
+                <Field name={'Member.Disability'} label={'Do you identify as having a disability?'} component={MyDropdown}
+                  options={this.state.disabilityOptions.map((value: any) => { return { key: value, text: value }; })}
+                />
+                <Field name={'Member.IdentifyIndigenous'} label={'Do you identify yourself as an Indigenous person (First Nations, Metis, or Inuit)?'} component={MyDropdown}
+                  options={this.state.identifyIndigenousOptions.map((value: any) => { return { key: value, text: value }; })}
+                />
+                <Field name={'Member.EthnoCultural'} label={'Ethno-Cultural Identity'} component={MyDropdown}
+                  options={this.state.ethnoCulturalOptions.map((value: any) => { return { key: value, text: value }; })}
+                />
+                <Field name={'Member.RacialBackground'} label={'Racial Background'} component={MyDropdown}
+                  options={this.state.racialBackgroundOptions.map((value: any) => { return { key: value, text: value }; })}
+                />
               </div>
-
               {
                 (this.state.activeCommittees.length > 0 && this.state.failedToLoadActiveCommittees === false) ?
                   <div>
