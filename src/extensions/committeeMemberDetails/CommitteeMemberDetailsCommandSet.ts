@@ -12,7 +12,6 @@ import * as ReactDOM from 'react-dom';
 import * as React from 'react';
 import { CommitteeMemberDashboardPanel } from '../../ClaringtonComponents/CommitteeMemberDashboardPanel';
 import { AddMemberPanel } from '../../ClaringtonComponents/AddMemberDialog';
-import { assign } from '@fluentui/react';
 
 /**
  * If your command set uses the ClientSideComponentProperties JSON input,
@@ -83,8 +82,5 @@ export default class CommitteeMemberDetailsCommandSet extends BaseListViewComman
 
     // You should call this.raiseOnChage() to update the command bar
     this.raiseOnChange();
-  }
-
-  protected onDispose(): void {
   }
 }

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MaskedTextField, ComboBox, DatePicker, TextField } from '@fluentui/react';
+import { MaskedTextField, ComboBox, DatePicker, TextField, Dropdown } from '@fluentui/react';
 
 export const MyComboBox = (fieldRenderProps: any): any => {
     const {
@@ -13,8 +13,6 @@ export const MyComboBox = (fieldRenderProps: any): any => {
         validationMessage,
         visited
     } = fieldRenderProps;
-
-
     return <div key={`${label}-${value}`}>
         <ComboBox
             label={label}
@@ -32,6 +30,35 @@ export const MyComboBox = (fieldRenderProps: any): any => {
         <span>{description}</span>
     </div>;
 };
+
+export const MyDropdown = (fieldRenderProps: any): any => {
+    const {
+        label,
+        options,
+        value,
+        required,
+        description,
+        onChange,
+        disabled,
+        validationMessage,
+        visited
+    } = fieldRenderProps;
+    return <div key={`${label}-${value}`}>
+        <Dropdown
+            label={label}
+            options={options}
+            onChange={(event, option) => {
+                // ! This calls the fields onChange event which in turn passes the new selected value to the form state.
+                onChange({ value: option.text });
+            }}
+            disabled={disabled}
+            required={required}
+            defaultSelectedKey={value}
+            errorMessage={(visited && validationMessage) ? validationMessage : ""}
+        />
+        <span>{description}</span>
+    </div>;
+}
 
 export const MyDatePicker = (fieldRenderProps: any): any => {
     return <div>

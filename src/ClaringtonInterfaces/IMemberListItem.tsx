@@ -23,5 +23,12 @@ export default interface IMemberListItem {
     RetentionDate?: string;
     RetentionDateCommittee?: string;
 
+    EthnoCultural?: string; // Choice column in SharePoint.
+    GenderChoice?: string; // Choice column in SharePoint.  Display name is 'Gender'.
+    IdentifyIndigenous?: string; // Choice column in SharePoint.
+    RacialBackground?: string; // Choice column in SharePoint.
+    Age?: string; // Choice column in SharePoint.
+    Disability?: string; // Choice column in SharePoint.
+
     Modified?: Date;
 }
