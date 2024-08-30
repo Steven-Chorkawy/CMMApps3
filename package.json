@@ -12,7 +12,7 @@
     "@fluentui/react": "^8.105.11",
     "@fluentui/react-icons-northstar": "^0.66.4",
     "@microsoft/decorators": "1.17.2",
-    "@microsoft/generator-sharepoint": "^1.15.2",
+    "@microsoft/generator-sharepoint": "^1.19.0",
     "@microsoft/sp-core-library": "1.17.2",
     "@microsoft/sp-dialog": "1.17.2",
     "@microsoft/sp-listview-extensibility": "1.17.2",
