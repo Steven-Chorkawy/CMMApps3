@@ -79,6 +79,9 @@ export default class NewCommitteeMember extends React.Component<INewCommitteeMem
         ethnoCulturalOptions: value[4],
         racialBackgroundOptions: value[5]
       });
+    }).catch(reason => {
+      console.error(reason);
+      alert('FAILED TO LOAD CHOICE FIELDS!');
     });
 
     GetListOfActiveCommittees()

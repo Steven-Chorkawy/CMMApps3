@@ -1,8 +1,7 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import { DefaultButton, IStackTokens, Panel, PanelType, PrimaryButton, Stack } from '@fluentui/react';
 import { CommitteeMemberDashboard } from './CommitteeMemberDashboard';
-import { NewCommitteeMemberFormComponent, NewCommitteeMemberFormItem } from './NewCommitteeMemberFormComponent';
+import { NewCommitteeMemberFormComponent } from './NewCommitteeMemberFormComponent';
 import { FieldArray, Form, FormElement, FormRenderProps } from '@progress/kendo-react-form';
 import { MyShimmer } from './MyShimmer';
 import { CreateNewCommitteeMember, GetListOfActiveCommittees } from '../HelperMethods/MyHelperMethods';

@@ -3,8 +3,6 @@ import * as React from 'react';
 // Require this to display version number.
 const packageSolution = require('../../config/package-solution.json');
 
-
-
 export default class PackageSolutionVersion extends React.Component<{}, {}> {
     constructor(props: any) {
         super(props);

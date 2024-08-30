@@ -198,8 +198,8 @@ export const GetLibraryContentTypes = async (libraryTitle: string): Promise<stri
 
 export const GetMembers = async (): Promise<IMemberListItem[]> => {
     // Sort method from here: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
-    let allMembers = await getSP().web.lists.getByTitle(MyLists.Members).items.getAll();
-    let allMembersSorted = allMembers.sort((a, b) => {
+    const ALL_MEMBERS = await getSP().web.lists.getByTitle(MyLists.Members).items.getAll();
+    const ALL_MEMBERS_SORTED = ALL_MEMBERS.sort((a, b) => {
         const nameA = a.Title.toUpperCase(); // ignore upper and lowercase
         const nameB = b.Title.toUpperCase(); // ignore upper and lowercase
         if (nameA < nameB) {
@@ -211,7 +211,7 @@ export const GetMembers = async (): Promise<IMemberListItem[]> => {
         // names must be equal
         return 0;
     });
-    return allMembersSorted;
+    return ALL_MEMBERS_SORTED;
 }
 
 export const GetMember = async (id: number): Promise<any> => await getSP().web.lists.getByTitle(MyLists.Members).items.getById(id)();
@@ -361,7 +361,6 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
         MemberID: memberId
     };
 
-    debugger;
     // We only want to update the _EndDate filed if an EndDate is provided. 
     if (committee._EndDate) {
         newMemberMetadata.OData__EndDate = committee._EndDate;
@@ -374,8 +373,7 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
         committeeMemberHistoryItemMetadata.StartDate = committee.StartDate;
     }
 
-    debugger; // TODO: This is not saving when StartDate is not set.
-
+    // TODO: This is not saving when StartDate is not set.
     // Step 2: Update Metadata.
     await sp.web.lists.getByTitle(committee.CommitteeName).items.getById(docSet.ID).update(newMemberMetadata)
         .catch(reason => {
