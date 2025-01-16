@@ -1,4 +1,4 @@
-import { Shimmer } from 'office-ui-fabric-react';
+import { Shimmer } from '@fluentui/react';
 import * as React from 'react';
 
 

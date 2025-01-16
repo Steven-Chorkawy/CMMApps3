@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Field, FormRenderProps, FieldArrayProps } from '@progress/kendo-react-form';
 import { DatePicker, getTheme } from '@fluentui/react';
-import { ActionButton, IconButton } from 'office-ui-fabric-react';
+import { ActionButton, IconButton } from '@fluentui/react';
 import { MyComboBox, MyDatePicker } from './MyFormComponents';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import ICommitteeFileItem from '../ClaringtonInterfaces/ICommitteeFileItem';
@@ -144,7 +144,8 @@ export class NewCommitteeMemberFormItem extends React.Component<INewCommitteeMem
                         name={`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}]._EndDate`}
                         label={'Term End Date'}
                         formatDate={OnFormatDate}
-                        component={DatePicker}
+                        component={MyDatePicker}
+                        required={true}
                     />
                 }
                 {
