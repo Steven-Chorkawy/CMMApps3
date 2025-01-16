@@ -1,5 +1,5 @@
 import { WebPartContext } from '@microsoft/sp-webpart-base';
-import { Panel, PanelType } from 'office-ui-fabric-react';
+import { Panel, PanelType } from '@fluentui/react';
 import * as React from 'react';
 import IMemberListItem from '../ClaringtonInterfaces/IMemberListItem';
 import { GetMember, OnFormatDate } from '../HelperMethods/MyHelperMethods';

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Panel, PanelType } from 'office-ui-fabric-react';
 import { CommitteeMemberDashboard } from './CommitteeMemberDashboard';
+import { Panel, PanelType } from '@fluentui/react';
 
 export class CommitteeMemberDashboardPanel extends React.Component<any, any> {
     private _context: any = null;

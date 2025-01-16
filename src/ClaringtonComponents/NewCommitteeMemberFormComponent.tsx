@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Field, FormRenderProps, FieldArrayProps } from '@progress/kendo-react-form';
 import { DatePicker, getTheme } from '@fluentui/react';
-import { ActionButton, IconButton } from 'office-ui-fabric-react';
+import { ActionButton, IconButton } from '@fluentui/react';
 import { MyComboBox, MyDatePicker } from './MyFormComponents';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import ICommitteeFileItem from '../ClaringtonInterfaces/ICommitteeFileItem';
