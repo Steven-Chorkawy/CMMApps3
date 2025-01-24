@@ -134,7 +134,6 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                                         required={false}
                                         options={this.state.positionOptions ? this.state.positionOptions.map((f: any) => { return { key: f, text: f }; }) : []}
                                         disabled={!this.state.committeeFileItem}
-                                        validator={value => value ? "" : "Please Select a Position."}
                                     />
                                     <Field
                                         name={'StartDate'}

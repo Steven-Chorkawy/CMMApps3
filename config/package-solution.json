@@ -3,7 +3,7 @@
   "solution": {
     "name": "cmm-apps-client-side-solution",
     "id": "1cdf0197-80d6-41f7-8b93-f190a7ec0fca",
-    "version": "3.2.0.6",
+    "version": "3.2.0.7",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
