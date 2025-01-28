@@ -431,6 +431,12 @@ export const RenewCommitteeMember = async (memberId: number, committeeMemberProp
         `,
     });
 
+
+    // If 0 records are found that means this member has not been added to the committee.  If they have not been added they cannot be renewed.
+    if (committeeMemberDocumentSet.length === 0) {
+        throw new Error("Cannot renew committee member because they have not been added to the committee.  Please use 'Add Member' to add new committee member.");
+    }
+
     // If we have anything other than 1 result, something went wrong.
     if (committeeMemberDocumentSet.length !== 1) {
         throw new Error("Something went wrong while querying Committee Member Document Set...");
