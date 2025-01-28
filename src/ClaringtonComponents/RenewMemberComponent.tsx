@@ -84,6 +84,7 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
             .catch(reason => {
                 console.log('on submit failed!!');
                 console.log(reason);
+                console.error(reason);
                 this.setState({
                     formStatus: CMMFormStatus.Error
                 });
