@@ -23,6 +23,7 @@ export interface IRenewMemberComponentState {
     selectedStartDate?: Date;
     calculatedEndDate?: Date;
     formStatus: CMMFormStatus;
+    errorMessage: string;
 }
 
 export class RenewMemberComponent extends React.Component<IRenewMemberComponentProps, IRenewMemberComponentState> {
@@ -33,7 +34,8 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
             activeCommittees: [],
             failedToLoadActiveCommittees: true,
             committeeFileItem: undefined,
-            formStatus: CMMFormStatus.NewForm
+            formStatus: CMMFormStatus.NewForm,
+            errorMessage: ""
         };
 
         GetListOfActiveCommittees()
@@ -86,7 +88,8 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                 console.log(reason);
                 console.error(reason);
                 this.setState({
-                    formStatus: CMMFormStatus.Error
+                    formStatus: CMMFormStatus.Error,
+                    errorMessage: reason
                 });
             });
     }
@@ -199,6 +202,9 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                                             <MessageBar messageBarType={MessageBarType.error} isMultiline={true}>
                                                 <div>
                                                     Error!  Something went wrong while renewing committee member.
+                                                </div>
+                                                <div>
+                                                    {this.state.errorMessage}
                                                 </div>
                                             </MessageBar>
                                         }
