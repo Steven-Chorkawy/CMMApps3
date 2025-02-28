@@ -373,7 +373,11 @@ export const CreateNewCommitteeMember = async (memberId: number, committee: any)
         committeeMemberHistoryItemMetadata.StartDate = committee.StartDate;
     }
 
-    // TODO: This is not saving when StartDate is not set.
+    if(committee.ApplicationDate) {
+        newMemberMetadata.ApplicationDate = committee.ApplicationDate;
+        committeeMemberHistoryItemMetadata.ApplicationDate = committee.ApplicationDate;
+    }
+
     // Step 2: Update Metadata.
     await sp.web.lists.getByTitle(committee.CommitteeName).items.getById(docSet.ID).update(newMemberMetadata)
         .catch(reason => {
@@ -450,6 +454,7 @@ export const RenewCommitteeMember = async (memberId: number, committeeMemberProp
     // * Step 2: Update the Doc Sets Status, Position, Start Date, and End Date.
     await committeeLibrary.items.getById(committeeMemberDocumentSet.ID).update({
         OData__Status: committeeMemberProperties._Status,
+        ApplicationDate: committeeMemberProperties.ApplicationDate,
         Position: committeeMemberProperties.Position,
         StartDate: committeeMemberProperties.StartDate,
         OData__EndDate: committeeMemberProperties._EndDate

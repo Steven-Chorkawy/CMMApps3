@@ -141,6 +141,13 @@ export class RenewMemberComponent extends React.Component<IRenewMemberComponentP
                                         disabled={!this.state.committeeFileItem}
                                     />
                                     <Field
+                                        name={`ApplicationDate`}
+                                        label={'Application Date'}
+                                        formatDate={OnFormatDate}
+                                        component={MyDatePicker}
+                                        disabled={!this.state.committeeFileItem}
+                                    />
+                                    <Field
                                         name={'StartDate'}
                                         label={'Term Start Date'}
                                         validator={value => value ? "" : "Please Select a Start Date."}

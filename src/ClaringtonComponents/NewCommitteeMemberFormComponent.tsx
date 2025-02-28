@@ -116,6 +116,12 @@ export class NewCommitteeMemberFormItem extends React.Component<INewCommitteeMem
                     options={this.state.positions ? this.state.positions.map(f => { return { key: f, text: f }; }) : []}
                 />
                 <Field
+                    name={`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}].ApplicationDate`}
+                    label={'Application Date'}
+                    formatDate={OnFormatDate}
+                    component={MyDatePicker}
+                />
+                <Field
                     name={`${this.props.listViewContext.parentField}[${this.props.dataItem[FORM_DATA_INDEX]}].StartDate`}
                     label={'Term Start Date'}
                     //allowTextInput={true}
@@ -209,7 +215,8 @@ export class NewCommitteeMemberFormComponent extends React.Component<INewCommitt
                 StartDate: '',
                 _EndDate: '',
                 _Status: '',
-                Position: ''
+                Position: '',
+                ApplicationDate: ''
             },
         });
     }
